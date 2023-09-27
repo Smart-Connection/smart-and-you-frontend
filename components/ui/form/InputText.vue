@@ -9,7 +9,7 @@
       :class="errorMessage ? 'text-red-380' : 'text-gray-500'"
       class="font-medium text-sm mb-[8px] block"
     >
-      {{ label }}
+      {{ label }} <span v-if="required" class="text-red-500">*</span>
     </label>
     <div class="w-full relative">
       <!-- icon -->
@@ -18,6 +18,7 @@
         ref="input"
         :name="name"
         :autocomplete="autocomplete"
+        :disabled="disabled"
         :class="[
           getPadding,
           errorMessage
@@ -51,6 +52,8 @@ const props = defineProps<{
   placeholder?: string;
   noScroll?: boolean;
   autocomplete?: string;
+  required?: boolean;
+  disabled?: boolean;
 }>();
 
 // Data

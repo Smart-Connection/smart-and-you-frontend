@@ -1,15 +1,17 @@
 import type { LoginResponse } from "@/types/api/Auth";
-import { useStorage } from "@vueuse/core";
 import { Error } from "~/types/api/Global";
 
 export const login = async (form: { email: string; password: string }) => {
   // Composables
-  const token = useState("token");
+  const config = useRuntimeConfig();
   const user = useState("user");
   const alert = useState("alert");
   const router = useRouter();
+  const token = useCookie("token", {
+    maxAge: parseInt(config.public.maxAuthCookieAge),
+  });
 
-  const { data, error }: { data: LoginResponse; error: Error | null } =
+  const { data, error }: { data: LoginResponse | null; error: Error | null } =
     await useFetchApi({
       url: "/auth/login",
       method: "POST",
@@ -22,10 +24,37 @@ export const login = async (form: { email: string; password: string }) => {
       message: "Email ou mot de passe incorrect",
       status: true,
     };
-  } else {
-    useStorage("token", data.authorization.token);
+  } else if (data) {
+    // Token
     token.value = data.authorization.token;
+
+    // Set user in store
     user.value = data.user;
-    router.push("/");
+
+    // Redirect to home
+    router.push("/"); // TODO: Change to a function to get witch dashboard
+  }
+};
+
+export const loadUser = async () => {
+  // Composables
+  const alert = useState("alert");
+  const user = useState("user");
+  const config = useRuntimeConfig();
+
+  const { data, error }: { data: LoginResponse | null; error: Error | null } =
+    await useFetchApi({
+      url: "/me",
+      method: "GET",
+    });
+
+  if (error) {
+    alert.value = {
+      type: "error",
+      message: "Une erreur s'est produite",
+      status: true,
+    };
+  } else if (data) {
+    user.value = data;
   }
 };

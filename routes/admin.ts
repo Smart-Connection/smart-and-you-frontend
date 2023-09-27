@@ -1,22 +1,33 @@
-import type { RouteLink } from '@/common/types/Routes'
-import { AdjustmentsHorizontalIcon } from '@heroicons/vue/24/solid'
+import type { RouteLink } from "@/types/router/Routes";
+import {
+  BuildingOfficeIcon,
+  ChartBarSquareIcon,
+} from "@heroicons/vue/24/outline";
 
 // Admin routes list
 export const ADMIN_ROUTES: RouteLink[] = [
   {
-    label: 'Manage',
-    icon: AdjustmentsHorizontalIcon,
+    label: "Dashboard",
+    icon: ChartBarSquareIcon,
+    path: "/modules/dashboard/admin",
+    routes: ["/modules/dashboard/admin"],
+  },
+  {
+    label: "Gestion",
+    icon: BuildingOfficeIcon,
     child: [
       {
-        label: 'Clients',
-        path: '/user',
-        routes: ['/user']
+        label: "Utilisateurs",
+        path: "/modules/user",
+        routes: ["/modules/user"],
       },
-      {
-        label: 'Utilisateurs',
-        path: '/user',
-        routes: ['/user']
-      }
-    ]
-  }
-]
+    ],
+  },
+  {
+    label: "Profile",
+    hidden: true,
+    icon: ChartBarSquareIcon,
+    path: "/account",
+    routes: ["/account"],
+  },
+];

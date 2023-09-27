@@ -2,7 +2,7 @@ import type { FunctionalComponent } from "vue";
 
 export interface RouteLink {
   label: string;
-  icon: FunctionalComponent;
+  icon?: FunctionalComponent;
   child?: {
     label: string;
     path: string;
@@ -10,4 +10,5 @@ export interface RouteLink {
   }[];
   path?: string;
   routes?: string[];
+  hidden?: boolean;
 }

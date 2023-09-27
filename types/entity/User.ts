@@ -5,7 +5,7 @@ export interface User {
   email_verified_at: string;
   firstname: string;
   lastname: string;
-  role: string;
+  role: "SUPER_ADMIN" | "ADMIN" | "USER";
   updated_at: string;
   created_at: string;
 }

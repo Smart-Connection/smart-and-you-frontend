@@ -1,8 +1,11 @@
 <template>
   <div class="lg:h-screen flex flex-col lg:flex-row">
-    <sidebar />
+    <sidebar class="shadow-2xl" />
     <div class="content-size overflow-y-auto">
-      <slot />
+      <ui-app-header />
+      <div class="md:p-8 p-2 pt-4">
+        <slot />
+      </div>
     </div>
   </div>
 </template>

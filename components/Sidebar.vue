@@ -19,7 +19,7 @@
     </div>
     <div
       ref="sidebar"
-      class="bg-violet-950 h-[100svh] w-full lg:w-[250px] lg:relative absolute p-4 transition-all"
+      class="bg-violet-950 h-[100svh] w-full lg:w-[250px] lg:relative absolute z-[9999] p-4 transition-all"
       :class="opened ? 'translate-x-0' : 'lg:translate-x-0 -translate-x-full'"
     >
       <!-- Logo -->
@@ -35,7 +35,7 @@
       <!-- routes container -->
       <div class="sidebar-content">
         <div :key="link.label" v-for="link in links">
-          <div v-if="link.child" class="mb-2">
+          <div v-if="link.child && link.hidden !== true" class="mb-2">
             <div
               :class="
                 link.child.find((child) =>
@@ -59,44 +59,45 @@
                 "
               />
             </div>
-            <div
+            <nuxt-link
               :key="child.label"
               v-for="child in link.child"
               :class="[
                 parentroutestatus === link.label ? 'h-[40px]' : 'h-[0px]',
-                child.routes.includes($route.path)
+                child.routes.includes(route.path)
                   ? 'select-background-color'
                   : '',
               ]"
               class="text-gray-50 flex items-center justify-between hover:bg-violet-900 rounded-md cursor-pointer duration-150 transition-all"
-              @click="$router.push(child.path), (opened = false)"
+              :to="child.path"
+              @click="opened = false"
             >
               <transition>
-                <div v-if="parentroutestatus === link.label" class="pl-[48px]">
+                <div
+                  v-if="parentroutestatus === link.label"
+                  class="pl-[48px] select-none"
+                >
                   {{ child.label }}
                 </div>
               </transition>
-            </div>
+            </nuxt-link>
           </div>
-          <div
-            v-else
-            class="p-2 hover:bg-violet-900 rounded-md cursor-pointer mb-2"
+          <nuxt-link
+            v-else-if="link.hidden !== true"
+            class="p-2 hover:bg-violet-900 rounded-md cursor-pointer block mb-2"
             :class="
               link.routes?.includes($route.path)
                 ? 'bg-violet-900 backdrop-opacity-10'
                 : ''
             "
-            @click="
-              $router.push(link.path ?? '/404'),
-                (parentroutestatus = ''),
-                (opened = false)
-            "
+            :to="link.path"
+            @click="(parentroutestatus = ''), (opened = false)"
           >
-            <div class="text-gray-50 flex items-center">
+            <div class="text-gray-50 flex items-center select-none">
               <component class="w-6 mr-4" :is="link.icon"></component>
               {{ link.label }}
             </div>
-          </div>
+          </nuxt-link>
         </div>
       </div>
     </div>
@@ -130,7 +131,6 @@ const openDropdown = (label: string) => {
 };
 
 const setOpenDropdown = async () => {
-  await router.isReady();
   const dropdown = links.find((link) =>
     link.child?.find((element) => element.routes.includes(route.path))
   );

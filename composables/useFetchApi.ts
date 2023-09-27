@@ -1,27 +1,26 @@
 import axios from "axios";
-import { useStorage } from "@vueuse/core";
+import { Error } from "~/types/api/Global";
 
-export const useFetchApi = async (options: {
+export const useFetchApi = async <T>(options: {
   url: string;
   method?: "GET" | "POST" | "DELETE" | "PUT";
   body?: any;
   params?: any;
-}) => {
+}): Promise<{ data: T | null; error: Error | null }> => {
   // Composable
-  const router = useRouter();
-  const token = useStorage("token", "");
+  const config = useRuntimeConfig();
+  const token = useCookie("token", {
+    maxAge: parseInt(config.public.maxAuthCookieAge),
+  });
 
   // Data
-  const baseUrl = "http://127.0.0.1:8000/api";
+  const baseUrl = config.public.apiUrl;
 
   const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
-    Authorization: `Bearer ${token}`,
+    Authorization: `Bearer ${token.value}`,
   };
-
-  let data = null;
-  let error = null;
 
   try {
     const apiResponse = await axios({
@@ -32,13 +31,17 @@ export const useFetchApi = async (options: {
       params: options.params,
     });
 
-    data = apiResponse.data;
+    const data = apiResponse.data;
+    const error = null;
+
+    return { data, error };
   } catch (e: any) {
-    error = {
+    const data = null;
+    const error: Error = {
       message: e.response.data.message,
       code: e.response.status,
     };
-  }
 
-  return { data, error };
+    return { data, error };
+  }
 };

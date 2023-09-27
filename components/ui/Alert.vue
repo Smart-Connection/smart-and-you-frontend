@@ -1,11 +1,11 @@
 <template>
   <div
-    class="rounded-md p-4 fixed top-[25px] border-solid border transition-all duration-500"
+    class="rounded-md p-4 fixed top-[54px] md:top-[74px] border-solid border transition-all duration-500 shadow"
     :class="[
       alert?.type === 'success'
         ? 'bg-green-50 border-green-400'
         : 'bg-red-50 border-red-400',
-      alert?.status ? 'right-[25px]' : '-right-[100%]',
+      alert?.status ? 'right-[8px]' : '-right-[100%]',
     ]"
   >
     <div class="flex">
