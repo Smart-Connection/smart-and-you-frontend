@@ -7,6 +7,9 @@ import { getRole, getRoleColor } from "@/helpers/role";
 const { data, execute } = await listUser();
 
 // Data
+const searchText = ref<string>("");
+const page = ref<number>(1);
+const user = useState<User>("user");
 const loading = ref<boolean>(true);
 const headers = [
   {
@@ -35,14 +38,20 @@ const headers = [
   },
 ];
 
-// Functionsz
-const load = async (options: { page?: number; search?: string }) => {
-  await execute(options);
+// Functions
+const load = async () => {
+  await execute({ page: page.value, search: searchText.value });
 };
 
-onMounted(() => {
+const search = (text: string) => {
+  searchText.value = text;
+  page.value = 1;
+  load();
+};
+
+onMounted(async () => {
   loading.value = true;
-  load({ page: 1 });
+  await load();
   loading.value = false;
 });
 </script>
@@ -50,8 +59,10 @@ onMounted(() => {
   <div>
     <ui-card title="Liste des utilisateurs">
       <template #headerActions>
-        <ui-search @search="load({ search: $event })" />
-        <ui-button> Ajouter un utilisateur </ui-button>
+        <ui-search @search="search($event)" />
+        <nuxt-link to="/modules/user/create">
+          <ui-button> Ajouter </ui-button>
+        </nuxt-link>
       </template>
       <template #content>
         <ui-table
@@ -60,7 +71,10 @@ onMounted(() => {
           :number-of-page="data?.last_page"
           :curent-page="data?.current_page"
           :loading="loading"
-          @page="load({ page: $event })"
+          @page="
+            page = $event;
+            load();
+          "
         >
           <template #item-role="{ item }">
             <ui-label :color="getRoleColor(item.role)">
@@ -68,7 +82,14 @@ onMounted(() => {
             </ui-label>
           </template>
           <template #item-action="{ item }">
-            <span class="text-blue-800">Modifier</span>
+            <nuxt-link class="text-blue-800" :to="`/modules/user/${item.id}`">
+              {{
+                user.role === "SUPER_ADMIN" ||
+                (user.role === "ADMIN" && item.role != "SUPER_ADMIN")
+                  ? "Modifier"
+                  : "Voir"
+              }}
+            </nuxt-link>
           </template>
         </ui-table>
       </template>

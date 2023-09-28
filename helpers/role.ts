@@ -12,7 +12,7 @@ export const getRole = (role: User["role"]) => {
 
 export const getRoleColor = (role: User["role"]) => {
   if (role === "ADMIN") {
-    return "orange";
+    return "purple";
   } else if (role === "SUPER_ADMIN") {
     return "red";
   } else if (role === "USER") {
@@ -20,4 +20,29 @@ export const getRoleColor = (role: User["role"]) => {
   } else {
     return "gray";
   }
+};
+
+export const getRoleList = (all?: boolean) => {
+  const user = useState<User>("user");
+  const roles = [
+    {
+      key: "USER",
+      value: "Utilisateur",
+    },
+  ];
+
+  if (all || user.value.role === "ADMIN" || user.value.role === "SUPER_ADMIN") {
+    roles.push({
+      key: "ADMIN",
+      value: "Administrateur",
+    });
+  }
+  if (all || user.value.role === "SUPER_ADMIN") {
+    roles.push({
+      key: "SUPER_ADMIN",
+      value: "Super administrateur",
+    });
+  }
+
+  return roles;
 };

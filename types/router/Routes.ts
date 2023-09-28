@@ -5,10 +5,10 @@ export interface RouteLink {
   icon?: FunctionalComponent;
   child?: {
     label: string;
-    path: string;
+    name: string;
     routes: string[];
   }[];
-  path?: string;
+  name?: string;
   routes?: string[];
   hidden?: boolean;
 }

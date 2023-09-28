@@ -19,7 +19,7 @@
     </div>
     <div
       ref="sidebar"
-      class="bg-violet-950 h-[100svh] w-full lg:w-[250px] lg:relative absolute z-[9999] p-4 transition-all"
+      class="bg-violet-950 h-[100svh] w-full lg:w-[250px] lg:relative absolute z-[8000] p-4 transition-all"
       :class="opened ? 'translate-x-0' : 'lg:translate-x-0 -translate-x-full'"
     >
       <!-- Logo -->
@@ -39,7 +39,7 @@
             <div
               :class="
                 link.child.find((child) =>
-                  child.routes.includes($route.path)
+                  child.routes.includes($route?.name?.toString() ?? '')
                 ) &&
                 (parentroutestatus === '' || parentroutestatus !== link.label)
                   ? 'select-background-color'
@@ -64,12 +64,12 @@
               v-for="child in link.child"
               :class="[
                 parentroutestatus === link.label ? 'h-[40px]' : 'h-[0px]',
-                child.routes.includes(route.path)
+                child.routes.includes(route.name?.toString() ?? '')
                   ? 'select-background-color'
                   : '',
               ]"
               class="text-gray-50 flex items-center justify-between hover:bg-violet-900 rounded-md cursor-pointer duration-150 transition-all"
-              :to="child.path"
+              :to="{ name: child.name }"
               @click="opened = false"
             >
               <transition>
@@ -86,11 +86,11 @@
             v-else-if="link.hidden !== true"
             class="p-2 hover:bg-violet-900 rounded-md cursor-pointer block mb-2"
             :class="
-              link.routes?.includes($route.path)
+              link.routes?.includes($route?.name?.toString() ?? '')
                 ? 'bg-violet-900 backdrop-opacity-10'
                 : ''
             "
-            :to="link.path"
+            :to="{ name: link.name }"
             @click="(parentroutestatus = ''), (opened = false)"
           >
             <div class="text-gray-50 flex items-center select-none">
@@ -132,7 +132,9 @@ const openDropdown = (label: string) => {
 
 const setOpenDropdown = async () => {
   const dropdown = links.find((link) =>
-    link.child?.find((element) => element.routes.includes(route.path))
+    link.child?.find((element) =>
+      element.routes.includes(route?.name?.toString() ?? "")
+    )
   );
   if (dropdown) {
     parentroutestatus.value = dropdown.label;

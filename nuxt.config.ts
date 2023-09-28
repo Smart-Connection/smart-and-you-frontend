@@ -21,4 +21,13 @@ export default defineNuxtConfig({
       maxAuthCookieAge: "",
     },
   },
+  vite: {
+    vue: {
+      script: {
+        defineModel: true,
+        propsDestructure: true,
+      },
+    },
+  },
+  tailwindcss: {},
 });

@@ -31,7 +31,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     }
   });
 
-  if (!routes.includes(to.path)) {
-    return navigateTo(home?.path);
+  if (!routes.includes(to?.name?.toString() ?? "")) {
+    return navigateTo({ name: home?.name });
   }
 });

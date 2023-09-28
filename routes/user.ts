@@ -6,14 +6,14 @@ export const USER_ROUTES: RouteLink[] = [
   {
     label: "Dashboard",
     icon: ChartBarSquareIcon,
-    path: "/modules/dashboard/user",
-    routes: ["/modules/dashboard/user"],
+    name: "modules-dashboard-user",
+    routes: ["modules-dashboard-user"],
   },
   {
-    label: "Profile",
+    label: "Profil",
     hidden: true,
     icon: ChartBarSquareIcon,
-    path: "/account",
-    routes: ["/account"],
+    name: "account",
+    routes: ["account"],
   },
 ];

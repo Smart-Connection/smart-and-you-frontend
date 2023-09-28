@@ -9,3 +9,10 @@ export interface User {
   updated_at: string;
   created_at: string;
 }
+
+export interface EditableUser {
+  email?: string;
+  firstname?: string;
+  lastname?: string;
+  role?: "SUPER_ADMIN" | "ADMIN" | "USER";
+}

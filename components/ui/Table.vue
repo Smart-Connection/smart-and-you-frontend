@@ -57,7 +57,6 @@ const nextPage = () => {
                   class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
                 >
                   <div
-                    v-if="loading"
                     class="h-3 bg-gray-200 rounded-full dark:bg-gray-700 w-48 animate-pulse"
                   ></div>
                 </td>

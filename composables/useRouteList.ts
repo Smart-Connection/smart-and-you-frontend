@@ -21,7 +21,7 @@ export const useRouteList = () => {
   // Get home
   const home = links.find((link) => {
     if (link.label === "Dashboard") {
-      return link.path;
+      return link.name;
     }
   });
 

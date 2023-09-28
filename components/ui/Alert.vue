@@ -1,6 +1,6 @@
 <template>
   <div
-    class="rounded-md p-4 fixed top-[54px] md:top-[74px] border-solid border transition-all duration-500 shadow"
+    class="rounded-md p-4 fixed top-[54px] md:top-[74px] border-solid border transition-all duration-500 shadow z-[9999]"
     :class="[
       alert?.type === 'success'
         ? 'bg-green-50 border-green-400'

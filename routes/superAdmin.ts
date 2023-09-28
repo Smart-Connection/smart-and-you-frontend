@@ -9,8 +9,8 @@ export const SUPER_ADMIN_ROUTES: RouteLink[] = [
   {
     label: "Dashboard",
     icon: ChartBarSquareIcon,
-    path: "/modules/dashboard/super-admin",
-    routes: ["/modules/dashboard/super-admin"],
+    name: "modules-dashboard-super-admin",
+    routes: ["modules-dashboard-super-admin"],
   },
   {
     label: "Gestion",
@@ -18,13 +18,13 @@ export const SUPER_ADMIN_ROUTES: RouteLink[] = [
     child: [
       {
         label: "Clients",
-        path: "/modules/client",
-        routes: ["/modules/client"],
+        name: "modules-client",
+        routes: ["modules-client"],
       },
       {
         label: "Utilisateurs",
-        path: "/modules/user",
-        routes: ["/modules/user"],
+        name: "modules-user",
+        routes: ["modules-user", "modules-user-id", "modules-user-create"],
       },
     ],
   },
@@ -32,7 +32,7 @@ export const SUPER_ADMIN_ROUTES: RouteLink[] = [
     label: "Profil",
     hidden: true,
     icon: ChartBarSquareIcon,
-    path: "/account",
-    routes: ["/account"],
+    name: "account",
+    routes: ["account"],
   },
 ];
