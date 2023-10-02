@@ -57,12 +57,14 @@ onMounted(async () => {
 </script>
 <template>
   <div>
+    <ui-page-header title="Utilisateurs">
+      <nuxt-link to="/modules/user/create">
+        <ui-button> Ajouter </ui-button>
+      </nuxt-link>
+    </ui-page-header>
     <ui-card title="Liste des utilisateurs">
       <template #headerActions>
         <ui-search @search="search($event)" />
-        <nuxt-link to="/modules/user/create">
-          <ui-button> Ajouter </ui-button>
-        </nuxt-link>
       </template>
       <template #content>
         <ui-table

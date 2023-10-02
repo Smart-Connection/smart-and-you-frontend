@@ -2,48 +2,66 @@
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { getRoleList } from "~/helpers/role";
-import { createUser, getUser, editUser } from "~/services/UserService";
+import {
+  resendEmail,
+  getUser,
+  editUser,
+  deleteUser,
+} from "~/services/UserService";
 import { User, EditableUser } from "~/types/entity/User";
 
-// Props
-const props = defineProps<{
-  type: string;
-}>();
-
-// Composable
-const router = useRouter();
-const route = useRoute();
-const { data: user, loading: userLoading, execute } = getUser();
-
-// Data
-const authUser = useState<User>("user");
-const loading = ref<boolean>(false);
-
 // Form
-const schema = yup.object({
+const schema = yup.object().shape({
   email: yup
     .string()
     .email("L'email n'est pas valide")
     .required("L'email est requis"),
   role: yup.string().required("Le rôle est requis"),
+  firstname: yup.string().required("Le prénom est requis"),
+  lastname: yup.string().required("Le nom est requis"),
 });
+
+// Composable
+const router = useRouter();
+const route = useRoute();
+const { data: user, loading: userLoading, execute } = getUser();
 const { handleSubmit, resetForm } = useForm<EditableUser>({
   validationSchema: schema,
 });
 
+// Data
+const authUser = useState<User>("user");
+const loading = ref<boolean>(false);
+const pageLoading = ref<boolean>(true);
+
 // Init
 if (route.params.id) {
-  await execute(parseInt(route.params.id.toString()));
+  await execute(route.params.id as string);
   if (user.value) {
     resetForm({ values: user.value });
+  } else {
+    router.push("/modules/user");
   }
-} else {
-  resetForm({ values: { role: "USER" } });
 }
+
+// Breadcrumbs
+const breadcrumbs = computed(() => [
+  {
+    label: "List des utilisateurs",
+    path: "/modules/user",
+  },
+  {
+    label: user.value?.firstname
+      ? `${user.value.firstname} ${user.value.lastname}`
+      : "...",
+    path: user.value?.id
+      ? `/modules/user/${user.value.id}`
+      : "/modules/user/create",
+  },
+]);
 
 // Computed
 const disabled = computed(() => {
-  if (props.type === "create") return false;
   if (authUser.value.role === "SUPER_ADMIN") return false;
   else if (
     authUser.value.role === "ADMIN" &&
@@ -56,32 +74,36 @@ const disabled = computed(() => {
 // Functions
 const submit = handleSubmit(async (values) => {
   loading.value = true;
-  if (props.type === "create") {
-    const { error } = await createUser(values);
-    if (!error) router.push("/modules/user");
-  } else if (props.type === "edit" && user.value?.id) {
-    const { error } = await editUser(user.value?.id, values);
+  if (user.value) {
+    const { error } = await editUser(user.value.id, values);
     if (!error) router.push("/modules/user");
   }
-
   loading.value = false;
 });
+
+const deleteModal = async () => {
+  if (user.value) {
+    const { error } = await deleteUser(user.value.id);
+    if (!error) router.push("/modules/user");
+  }
+};
 </script>
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <ui-page-header title="Utilisateurs" :breadcrumbs="breadcrumbs" />
+  <p v-if="!pageLoading">Charge</p>
+  <div v-if="user" class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <ui-info
-      v-if="user?.account_creation_token"
+      v-if="user.account_creation_token"
       class="col-span-2"
       type="alert"
       title="Attention"
-      description="Cette utilisateur n'a pas finalisé sont inscription. "
+      description="Cet utilisateur n'a pas finalisé sont inscription. "
     >
-      <ui-button color="secondary">Renvoyer l'invitation</ui-button>
+      <ui-button color="secondary" @click="resendEmail(user.id)">
+        Renvoyer l'invitation
+      </ui-button>
     </ui-info>
-    <ui-card
-      title="Informations personnel"
-      v-if="type === 'edit' && user?.firstname"
-    >
+    <ui-card title="Informations personnel" v-if="user.firstname">
       <template #content>
         <ui-form-input-text
           name="firstname"
@@ -103,7 +125,7 @@ const submit = handleSubmit(async (values) => {
     </ui-card>
     <ui-card
       title="Informations d'authentification"
-      :class="type === 'create' || !user?.firstname ? 'col-span-2' : ''"
+      :class="!user.firstname ? 'col-span-2' : ''"
     >
       <template #content>
         <ui-form-input-text
@@ -124,16 +146,19 @@ const submit = handleSubmit(async (values) => {
       </template>
     </ui-card>
     <div class="flex items-center justify-end col-span-2">
+      <ui-delete-modal
+        v-if="!disabled"
+        @confirm="deleteModal"
+        title="Suppression d'un utilisateur"
+        description="Si vous cliquez sur supprimer, cette utilisateur sera totalement supprimé"
+      />
       <ui-button
-        v-if="type !== 'create' && !disabled"
-        color="error"
+        v-if="!disabled"
         @click="submit"
-        class="mr-2"
+        class="ml-2"
+        :loading="loading"
       >
-        Supprimer
-      </ui-button>
-      <ui-button v-if="!disabled" @click="submit" :loading="loading">
-        {{ type === "create" ? "Ajouter" : "Modifier" }}
+        Modifier
       </ui-button>
     </div>
   </div>

@@ -4,5 +4,5 @@ definePageMeta({
 });
 </script>
 <template>
-  <modules-user-form type="edit" />
+  <modules-user-edit-form />
 </template>

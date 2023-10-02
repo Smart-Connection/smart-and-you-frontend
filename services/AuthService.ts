@@ -10,7 +10,6 @@ export const login = async (form: { email: string; password: string }) => {
   const token = useCookie("token", {
     maxAge: parseInt(config.public.maxAuthCookieAge),
   });
-  const { home } = useRouteList();
 
   const { data, error }: { data: LoginResponse | null; error: Error | null } =
     await useFetchApi({
@@ -31,7 +30,9 @@ export const login = async (form: { email: string; password: string }) => {
 
     // Set user in store
     user.value = data.user;
+
     // Redirect to home
+    const { home } = useRouteList();
     router.push({ name: home?.name });
   }
 };
@@ -48,13 +49,7 @@ export const loadUser = async () => {
       method: "GET",
     });
 
-  if (error) {
-    alert.value = {
-      type: "error",
-      message: "Une erreur s'est produite",
-      status: true,
-    };
-  } else if (data) {
+  if (!error) {
     user.value = data;
   }
 };

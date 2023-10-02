@@ -25,7 +25,7 @@ export const createUser = async (form: EditableUser) => {
   return { data, error };
 };
 
-export const editUser = async (id: number, form: EditableUser) => {
+export const editUser = async (id: string, form: EditableUser) => {
   // Composables
   const alert = useState("alert");
 
@@ -54,6 +54,34 @@ export const editUser = async (id: number, form: EditableUser) => {
   return { data, error };
 };
 
+export const deleteUser = async (id: string) => {
+  // Composables
+  const alert = useState("alert");
+
+  // Call Api
+  const { data, error }: { data: User | null; error: Error | null } =
+    await useFetchApi({
+      url: `/user/${id}`,
+      method: "DELETE",
+    });
+
+  if (error) {
+    alert.value = {
+      type: "error",
+      message: error.message,
+      status: true,
+    };
+  } else {
+    alert.value = {
+      type: "success",
+      message: "Utilisateur supprimé",
+      status: true,
+    };
+  }
+
+  return { data, error };
+};
+
 export const getUser = () => {
   // Composables
   const alert = useState("alert");
@@ -63,7 +91,7 @@ export const getUser = () => {
   const loading = ref<boolean>(false);
 
   // Call api
-  const execute = async (id: number) => {
+  const execute = async (id: string) => {
     loading.value = true;
     const {
       data: response,
@@ -146,6 +174,30 @@ export const updateUser = async (form: {
     alert.value = {
       type: "success",
       message: "Information personnel mis à jour",
+      status: true,
+    };
+  }
+};
+
+export const resendEmail = async (id: string) => {
+  // Composables
+  const alert = useState("alert");
+
+  const { error, data } = await useFetchApi({
+    url: `/user/resend-email/${id}`,
+  });
+
+  if (error) {
+    alert.value = {
+      type: "error",
+      message: "Une erreur c'est produite",
+      status: true,
+    };
+  } else if (data) {
+    // Alert
+    alert.value = {
+      type: "success",
+      message: "Email renvoyé avec succès",
       status: true,
     };
   }

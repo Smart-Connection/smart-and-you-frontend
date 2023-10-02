@@ -38,7 +38,7 @@ export const useFetchApi = async <T>(options: {
   } catch (e: any) {
     const data = null;
     const error: Error = {
-      message: e.response.data.message,
+      message: e.response.data?.message || "",
       code: e.response.status,
     };
 

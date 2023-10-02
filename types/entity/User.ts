@@ -1,5 +1,5 @@
 export interface User {
-  id: number;
+  id: string;
   account_creation_token: string;
   email: string;
   email_verified_at: string;
