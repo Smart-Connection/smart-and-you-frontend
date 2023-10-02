@@ -22,12 +22,12 @@
 
         <div class="flex items-center justify-between mt-6">
           <div class="text-sm">
-            <p
+            <nuxt-link
               class="font-semibold text-indigo-600 hover:text-indigo-500"
-              @click="$router.push('/auth/forgot-password')"
+              to="/auth/forgot-password"
             >
               Mot de passe oublié ?
-            </p>
+            </nuxt-link>
           </div>
         </div>
 

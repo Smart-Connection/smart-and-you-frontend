@@ -89,3 +89,58 @@ export const loadUser = async () => {
     user.value = data;
   }
 };
+
+export const forgot = async (form: { email: string }) => {
+  // Composables
+  const alert = useState("alert");
+
+  const { data, error }: { data: LoginResponse | null; error: Error | null } =
+    await useFetchApi({
+      url: "/auth/forgot-password",
+      method: "POST",
+      body: form,
+    });
+
+  if (!error) {
+    alert.value = {
+      type: "success",
+      message: "Un email de vérification à été envoyé",
+      status: true,
+    };
+  } else {
+    alert.value = {
+      type: "error",
+      message: error.message,
+      status: true,
+    };
+  }
+};
+
+export const reset = async (form: { password: string; token: string }) => {
+  // Composables
+  const config = useRuntimeConfig();
+  const alert = useState("alert");
+  const router = useRouter();
+
+  const { data, error }: { data: LoginResponse | null; error: Error | null } =
+    await useFetchApi({
+      url: "/auth/reset",
+      method: "POST",
+      body: form,
+    });
+
+  if (error) {
+    alert.value = {
+      type: "error",
+      message: error,
+      status: true,
+    };
+  } else {
+    alert.value = {
+      type: "success",
+      message: "Mot de passe modifié avec succès",
+      status: true,
+    };
+    router.push("/auth/login");
+  }
+};
