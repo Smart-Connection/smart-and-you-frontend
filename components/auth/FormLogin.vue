@@ -6,7 +6,7 @@
     <div
       class="bg-white px-6 py-12 shadow sm:rounded-lg sm:px-12 mt-10 w-full sm:w-[480px]"
     >
-      <form class="space-y-6" @submit.prevent="submit()">
+      <form @submit.prevent="submit()">
         <ui-form-input-text
           label="Email"
           placeholder="Jean.dupont@mail.com"
@@ -20,8 +20,8 @@
           name="password"
         />
 
-        <div class="flex items-center justify-between">
-          <div class="text-sm leading-6">
+        <div class="flex items-center justify-between mt-6">
+          <div class="text-sm">
             <p
               class="font-semibold text-indigo-600 hover:text-indigo-500"
               @click="$router.push('/auth/forgot-password')"
@@ -31,11 +31,15 @@
           </div>
         </div>
 
-        <div>
-          <ui-button color="primary" type="submit" :loading="loading" block
-            >Connexion</ui-button
-          >
-        </div>
+        <ui-button
+          color="primary"
+          type="submit"
+          :loading="loading"
+          block
+          class="mt-10"
+        >
+          Connexion
+        </ui-button>
       </form>
     </div>
   </div>
