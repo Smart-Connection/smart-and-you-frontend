@@ -16,14 +16,11 @@ export const useFetchApi = async <T>(options: {
   // Data
   const baseUrl = config.public.apiUrl;
 
-  console.log(baseUrl);
-
   const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
     Authorization: `Bearer ${token.value}`,
   };
-
 
   try {
     const apiResponse = await axios({
