@@ -1,10 +1,11 @@
 module.exports = {
     apps: [
       {
-        name: 'NuxtAppName',
+        name: 'Smartfit',
         exec_mode: 'cluster',
+        port: '3000',
         instances: 2,
-        script: './node_modules/nuxt/bin/nuxt.js',
+        script: './.output/server/index.mjs',
         args: 'start'
       }
     ]
