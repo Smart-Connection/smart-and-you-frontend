@@ -19,7 +19,11 @@ export const SUPER_ADMIN_ROUTES: RouteLink[] = [
       {
         label: "Clients",
         name: "modules-client",
-        routes: ["modules-client"],
+        routes: [
+          "modules-client",
+          "modules-client-id",
+          "modules-client-create",
+        ],
       },
       {
         label: "Utilisateurs",

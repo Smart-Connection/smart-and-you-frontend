@@ -3,6 +3,7 @@ import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { EditableUser } from "~/types/entity/User";
 import { createUser } from "~/services/UserService";
+import { listClient } from "~/services/ClientService";
 import { getRoleList } from "~/helpers/role";
 
 // Data
@@ -25,9 +26,11 @@ const schema = yup.object().shape({
     .email("L'email n'est pas valide")
     .required("L'email est requis"),
   role: yup.string().required("Le rôle est requis"),
+  client: yup.string().required("Le client est requis"),
 });
 
 // Composable
+const { data, execute } = listClient();
 const router = useRouter();
 const { handleSubmit, resetForm } = useForm<EditableUser>({
   validationSchema: schema,
@@ -38,8 +41,9 @@ const { handleSubmit, resetForm } = useForm<EditableUser>({
 
 const submit = handleSubmit(async (values) => {
   loading.value = true;
-  const { error } = await createUser(values);
-  if (!error) router.push("/modules/user");
+  console.log(values);
+  // const { error } = await createUser(values);
+  // if (!error) router.push("/modules/user");
   loading.value = false;
 });
 </script>
@@ -62,6 +66,16 @@ const submit = handleSubmit(async (values) => {
         label="Rôle"
         :items="getRoleList()"
         required
+      />
+      <ui-form-input-comboboxe
+        name="client"
+        item-key="id"
+        item-label="name"
+        label="Client"
+        required
+        :items="data"
+        @change="execute({ search: $event, per_page: 5 })"
+        placeholder="Chercher un client"
       />
     </template>
   </ui-card>

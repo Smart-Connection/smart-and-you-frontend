@@ -3,7 +3,7 @@
     <sidebar class="shadow-2xl" />
     <div class="content-size overflow-y-auto">
       <ui-app-header />
-      <div class="md:p-8 p-2 pt-4">
+      <div class="md:p-8 p-2 pt-4 pb-12">
         <slot />
       </div>
     </div>

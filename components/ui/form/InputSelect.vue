@@ -1,14 +1,4 @@
 <script lang="ts" setup>
-// Imports
-import { ref } from "vue";
-import {
-  Listbox,
-  ListboxButton,
-  ListboxLabel,
-  ListboxOption,
-  ListboxOptions,
-} from "@headlessui/vue";
-import { CheckIcon, ChevronUpDownIcon } from "@heroicons/vue/20/solid";
 import { useField } from "vee-validate";
 
 // Props

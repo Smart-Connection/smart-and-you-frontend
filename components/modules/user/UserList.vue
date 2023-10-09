@@ -29,6 +29,10 @@ const headers = [
     key: "email",
   },
   {
+    label: "Client",
+    key: "client",
+  },
+  {
     label: "Role",
     key: "role",
   },
@@ -78,6 +82,16 @@ onMounted(async () => {
             load();
           "
         >
+          <template #item-client="{ item }">
+            <nuxt-link
+              class="text-blue-800"
+              v-if="user.role === 'SUPER_ADMIN' && item.client_id"
+              :to="`/modules/client/${item.client.id}`"
+            >
+              {{ item.client.name }}
+            </nuxt-link>
+            <p v-else-if="item.client_id">{{ item.client.name }}</p>
+          </template>
           <template #item-role="{ item }">
             <ui-label :color="getRoleColor(item.role)">
               {{ getRole(item.role) }}
