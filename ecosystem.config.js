@@ -6,7 +6,7 @@ module.exports = {
         port: '3000',
         instances: 2,
         script: './.output/server/index.mjs',
-        args: 'start'
+        args: 'preview'
       }
     ]
   }
