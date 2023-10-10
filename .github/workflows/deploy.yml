@@ -22,7 +22,4 @@ jobs:
             git pull --rebase
             rm -rf node_modules
             rm package-lock.json
-            node -v
-            npm install
-            npm run build
-            pm2 restart Smartfit
+            sh ./script/en
