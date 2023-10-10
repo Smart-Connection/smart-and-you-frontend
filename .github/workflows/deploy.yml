@@ -22,8 +22,8 @@ jobs:
             git pull --rebase
             rm -rf node_modules
             rm package-lock.json
-            echo 'export PATH=$PATH:/usr/local/bin' >> $HOME/.bashrc
-            source $HOME/.bashrc
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
             node -v
             npm install
             npm run build
