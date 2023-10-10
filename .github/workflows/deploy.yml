@@ -22,4 +22,9 @@ jobs:
             git pull --rebase
             rm -rf node_modules
             rm package-lock.json
-            sh ./script/deploy-dev.sh
+            echo 'export PATH=$PATH:/usr/local/bin' >> $HOME/.bashrc
+            source $HOME/.bashrc
+            node -v
+            npm install
+            npm run build
+            pm2 restart Smartfit
