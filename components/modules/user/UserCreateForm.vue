@@ -41,9 +41,8 @@ const { handleSubmit, resetForm } = useForm<EditableUser>({
 
 const submit = handleSubmit(async (values) => {
   loading.value = true;
-  console.log(values);
-  // const { error } = await createUser(values);
-  // if (!error) router.push("/modules/user");
+  const { error } = await createUser(values);
+  if (!error) router.push("/modules/user");
   loading.value = false;
 });
 </script>
