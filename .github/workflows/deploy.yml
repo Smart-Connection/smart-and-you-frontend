@@ -24,7 +24,6 @@ jobs:
             rm package-lock.json
             export NVM_DIR=~/.nvm
             source ~/.nvm/nvm.sh
-            node -v
             npm install
             npm run build
             pm2 restart Smartfit
