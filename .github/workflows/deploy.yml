@@ -28,5 +28,5 @@ jobs:
             npm install
             npm run build
             cp .env .output/server/.env
-            pm2 kill Smartfit
+            pm2 kill
             pm2 start
