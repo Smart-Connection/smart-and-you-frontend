@@ -17,13 +17,11 @@ jobs:
           port: 22
           script: |
             cd /var/www/html/smart-fit-frontend
+            export NVM_DIR=~/.nvm
+            source ~/.nvm/nvm.sh
             git checkout develop
             git stash
             git pull --rebase
-            rm -rf node_modules
-            rm package-lock.json
-            export NVM_DIR=~/.nvm
-            source ~/.nvm/nvm.sh
             rm -rf .output
             npm install
             npm run build
