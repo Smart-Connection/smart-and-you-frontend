@@ -1,5 +1,5 @@
 <template>
-  <div>dashboards</div>
+  <div>Dashboard super admin</div>
 </template>
 <script lang="ts" setup>
 definePageMeta({
