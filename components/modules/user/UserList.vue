@@ -9,10 +9,6 @@ const page = ref<number>(1);
 const user = useState<User>("user");
 const headers = [
   {
-    label: "id",
-    key: "id",
-  },
-  {
     label: "Prénom",
     key: "firstname",
   },
@@ -79,7 +75,7 @@ const search = (text: string) => {
             <nuxt-link
               class="text-blue-800"
               v-if="user.role === 'SUPER_ADMIN' && item.client_id"
-              :to="`/modules/client/${item.client.id}`"
+              :to="`/modules/client/view/${item.client.id}`"
             >
               {{ item.client.name }}
             </nuxt-link>
@@ -91,13 +87,15 @@ const search = (text: string) => {
             </ui-label>
           </template>
           <template #item-action="{ item }">
-            <nuxt-link class="text-blue-800" :to="`/modules/user/${item.id}`">
-              {{
-                user.role === "SUPER_ADMIN" ||
-                (user.role === "ADMIN" && item.role != "SUPER_ADMIN")
-                  ? "Modifier"
-                  : "Voir"
-              }}
+            <nuxt-link
+              v-if="
+                user.role === 'SUPER_ADMIN' ||
+                (user.role === 'ADMIN' && item.role != 'SUPER_ADMIN')
+              "
+              class="text-blue-800"
+              :to="`/modules/user/edit/${item.id}`"
+            >
+              Modifier
             </nuxt-link>
           </template>
         </ui-table>

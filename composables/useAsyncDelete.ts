@@ -1,7 +1,8 @@
-export function useAsyncDelete<T>(
-  deleteApiCall: (id: string) => Promise<T>,
-  callback: () => void
-) {
+export function useAsyncDelete<T>(options: {
+  delete: (id: string) => Promise<T>;
+  callback: () => void;
+  messages?: { success?: string; error?: string };
+}) {
   const deleting = ref(false);
   return { deleteFunction, deleting };
 
@@ -9,19 +10,21 @@ export function useAsyncDelete<T>(
     deleting.value = true;
     const alert = useState("alert");
 
-    return deleteApiCall(id)
+    return options
+      .delete(id)
       .then(() => {
         alert.value = {
           type: "success",
-          message: "Enregistrement supprimé avec succès",
+          message:
+            options.messages?.success ?? "Enregistrement supprimé avec succès",
           status: true,
         };
-        callback();
+        options.callback();
       })
       .catch((err) => {
         alert.value = {
           type: "error",
-          message: err,
+          message: options.messages?.error ?? err,
           status: true,
         };
       })

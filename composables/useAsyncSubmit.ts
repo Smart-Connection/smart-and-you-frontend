@@ -8,6 +8,7 @@ export function useAsyncSubmit<T>(options: {
   submitApiCall: () => Promise<T>;
   messages?: { success?: string; error?: string };
   callbackSuccess?: CallableFunction;
+  noMessage?: boolean;
 }): UseAsyncDataReturn<T> {
   const alert = useState("alert");
   const saving = ref(false);
@@ -23,14 +24,16 @@ export function useAsyncSubmit<T>(options: {
     return options
       .submitApiCall()
       .then((response) => {
-        alert.value = {
-          type: "success",
-          message: options.messages?.success ?? "Action réussi",
-          status: true,
-        };
+        if (!options.noMessage) {
+          alert.value = {
+            type: "success",
+            message: options.messages?.success ?? "Action réussi",
+            status: true,
+          };
+        }
 
         if (options.callbackSuccess) {
-          options.callbackSuccess();
+          options.callbackSuccess(response);
         }
 
         return response;
@@ -38,7 +41,7 @@ export function useAsyncSubmit<T>(options: {
       .catch((err) => {
         alert.value = {
           type: "error",
-          message: options.messages?.success ?? err,
+          message: options.messages?.error ?? err,
           status: true,
         };
         throw err;

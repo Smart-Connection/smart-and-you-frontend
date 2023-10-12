@@ -3,21 +3,8 @@ import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { EditableUser } from "~/types/entity/User";
 import { createUser } from "~/services/UserService";
-import { listClient } from "~/services/ClientService";
+import { getClients } from "~/services/ClientService";
 import { getRoleList } from "~/helpers/role";
-
-// Data
-const loading = ref<boolean>(false);
-const breadcrumbs = [
-  {
-    label: "List des utilisateurs",
-    path: "/modules/user",
-  },
-  {
-    label: "Création d'un utilisateur",
-    path: "/modules/user/create",
-  },
-];
 
 // Form
 const schema = yup.object().shape({
@@ -30,21 +17,52 @@ const schema = yup.object().shape({
 });
 
 // Composable
-const { data, execute } = listClient();
 const router = useRouter();
-const { handleSubmit, resetForm } = useForm<EditableUser>({
+const { handleSubmit, values } = useForm<EditableUser>({
   validationSchema: schema,
   initialValues: {
     role: "USER",
   },
 });
 
-const submit = handleSubmit(async (values) => {
-  loading.value = true;
-  const { error } = await createUser(values);
-  if (!error) router.push("/modules/user");
-  loading.value = false;
+// Data
+const clientSearchText = ref("");
+const loading = ref<boolean>(false);
+const breadcrumbs = [
+  {
+    label: "List des utilisateurs",
+    path: "/modules/user",
+  },
+  {
+    label: "Création d'un utilisateur",
+    path: "/modules/user/create",
+  },
+];
+
+// Client list
+const { execute: reloadClients, data: clients } = useAsyncData({
+  promise: () =>
+    getClients({
+      search: clientSearchText.value,
+      per_page: 5,
+    }),
 });
+
+// Submit
+const submit = handleSubmit(() => {
+  return save();
+});
+const { submit: save, saving } = useAsyncSubmit({
+  submitApiCall: () => createUser(values),
+  messages: { success: "Utilisateur correctement créé" },
+  callbackSuccess: () => router.push("/modules/user"),
+});
+
+// Search
+const searchClient = (text: string) => {
+  clientSearchText.value = text;
+  reloadClients();
+};
 </script>
 <template>
   <ui-page-header
@@ -72,13 +90,13 @@ const submit = handleSubmit(async (values) => {
         item-label="name"
         label="Client"
         required
-        :items="data"
-        @change="execute({ search: $event, per_page: 5 })"
+        :items="clients"
+        @change="searchClient"
         placeholder="Chercher un client"
       />
     </template>
   </ui-card>
   <div class="flex items-center justify-end mt-4">
-    <ui-button @click="submit" :loading="loading"> Ajouter </ui-button>
+    <ui-button @click="submit" :loading="saving"> Ajouter </ui-button>
   </div>
 </template>

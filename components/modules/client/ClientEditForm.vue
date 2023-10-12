@@ -48,7 +48,7 @@ const breadcrumbs = computed(() => [
   },
 ]);
 
-// Functions
+// Submit
 const submit = handleSubmit(async (values) => {
   return save();
 });
@@ -57,12 +57,14 @@ const { submit: save, saving } = useAsyncSubmit({
   messages: { success: "Client modifié avec succès" },
 });
 
-const { deleteFunction, deleting } = useAsyncDelete(
-  () => deleteClient(id),
-  () => {
-    router.push("/modules/client");
-  }
-);
+const { deleteFunction, deleting } = useAsyncDelete({
+  delete: () => deleteClient(id),
+  callback: () => router.push("/modules/client"),
+  messages: {
+    error: "Une erreur est arrivé lors de le suppression du client",
+    success: "Client correctement supprimé",
+  },
+});
 </script>
 <template>
   <ui-page-header :title="data?.name ?? '...'" :breadcrumbs="breadcrumbs" />

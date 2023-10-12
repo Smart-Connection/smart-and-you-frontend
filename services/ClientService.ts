@@ -4,6 +4,7 @@ import { Client } from "~/types/entity/Client";
 export const getClients = async (params?: {
   search?: string;
   page?: number;
+  per_page?: number;
 }): Promise<Pagination<Client[]>> => {
   return useFetchApi({
     url: "/client",

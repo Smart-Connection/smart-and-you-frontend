@@ -74,6 +74,12 @@ const searchDebounced = useDebounceFn(() => {
       >
         {{ item[itemLabel] }}
       </div>
+      <div
+        v-if="items.data.length === 0"
+        class="text-sm p-3 rounded cursor-pointer"
+      >
+        Aucun donnée
+      </div>
     </div>
   </div>
 </template>
