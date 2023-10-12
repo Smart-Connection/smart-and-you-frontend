@@ -28,7 +28,7 @@
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { User } from "~/types/entity/User";
-import { updateUser } from "~/services/UserService";
+import { updateMe } from "~/services/UserService";
 
 // Data
 const loading = ref<boolean>(false);
@@ -41,7 +41,7 @@ const schema = yup.object({
 
 // Composables
 const user = useState<User>("user");
-const { handleSubmit } = useForm({
+const { handleSubmit, values } = useForm({
   validationSchema: schema,
   initialValues: {
     firstname: user.value.firstname,
@@ -49,9 +49,16 @@ const { handleSubmit } = useForm({
   },
 });
 
+// Submit
 const submit = handleSubmit(async (values) => {
-  loading.value = true;
-  await updateUser(values);
-  loading.value = false;
+  return save();
+});
+const { submit: save, saving } = useAsyncSubmit({
+  submitApiCall: () =>
+    updateMe({
+      firstname: values.firstname,
+      lastname: values.lastname,
+    }),
+  messages: { success: "Information correctement modifié" },
 });
 </script>
