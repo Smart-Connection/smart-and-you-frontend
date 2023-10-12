@@ -21,8 +21,9 @@ export const SUPER_ADMIN_ROUTES: RouteLink[] = [
         name: "modules-client",
         routes: [
           "modules-client",
-          "modules-client-id",
+          "modules-client-edit-id",
           "modules-client-create",
+          "modules-client-view-id",
         ],
       },
       {

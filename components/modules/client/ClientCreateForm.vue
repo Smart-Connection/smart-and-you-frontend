@@ -1,11 +1,10 @@
 <script setup lang="ts">
 import * as yup from "yup";
 import { useForm } from "vee-validate";
-import { EditableClient } from "~/types/entity/Client";
+import { Client } from "~/types/entity/Client";
 import { createClient } from "~/services/ClientService";
 
 // Data
-const loading = ref<boolean>(false);
 const breadcrumbs = [
   {
     label: "List des clients",
@@ -33,15 +32,17 @@ const schema = yup.object().shape({
 
 // Composable
 const router = useRouter();
-const { handleSubmit, resetForm } = useForm<EditableClient>({
+const { handleSubmit, values } = useForm<Client>({
   validationSchema: schema,
 });
 
 const submit = handleSubmit(async (values) => {
-  loading.value = true;
-  const { error } = await createClient(values);
-  if (!error) router.push("/modules/client");
-  loading.value = false;
+  return save();
+});
+const { submit: save, saving } = useAsyncSubmit({
+  submitApiCall: () => createClient(values),
+  messages: { success: "Client modifié avec succès" },
+  callbackSuccess: () => router.push("/modules/client"),
 });
 </script>
 <template>
@@ -100,6 +101,6 @@ const submit = handleSubmit(async (values) => {
   </div>
 
   <div class="flex items-center justify-end mt-4">
-    <ui-button @click="submit" :loading="loading"> Ajouter </ui-button>
+    <ui-button @click="submit" :loading="saving"> Ajouter </ui-button>
   </div>
 </template>

@@ -73,22 +73,11 @@ export const register = async (form: RegisterRequest) => {
   }
 };
 
-export const loadUser = async () => {
-  // Composables
-  const alert = useState("alert");
-  const user = useState("user");
-  const config = useRuntimeConfig();
-
-  const { data, error }: { data: LoginResponse | null; error: Error | null } =
-    await useFetchApi({
-      url: "/me",
-      method: "GET",
-    });
-
-  if (!error) {
-    user.value = data;
-  }
-};
+export const loadUser = async () =>
+  useFetchApi({
+    url: "/me",
+    method: "GET",
+  });
 
 export const forgot = async (form: { email: string }) => {
   // Composables

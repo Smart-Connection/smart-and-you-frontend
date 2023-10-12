@@ -1,6 +1,64 @@
 import { Error, Pagination } from "~/types/api/Global";
 import { EditableUser, User } from "~/types/entity/User";
 
+export const getUsers = async (params?: {
+  search?: string;
+  page?: number;
+}): Promise<Pagination<User[]>> => {
+  return useFetchApi({
+    url: "/user",
+    params: params,
+  });
+};
+
+export const deleteUser = async (id: string) => {
+  return useFetchApi({
+    url: `/user/${id}`,
+    method: "DELETE",
+  });
+};
+
+// =================================================== Me user
+export const getMe = async (): Promise<User> => {
+  return useFetchApi({
+    url: "/me",
+  });
+};
+
+// TODO:
+
+export const getUser = () => {
+  // Composables
+  const alert = useState("alert");
+
+  // Data
+  const data = ref<User | null>();
+  const loading = ref<boolean>(false);
+
+  // Call api
+  const execute = async (id: string) => {
+    loading.value = true;
+    const {
+      data: response,
+      error,
+    }: { data: User | null; error: Error | null } = await useFetchApi({
+      url: `/user/${id}`,
+    });
+
+    data.value = response;
+    if (error) {
+      alert.value = {
+        type: "error",
+        message: error.message,
+        status: true,
+      };
+    }
+    loading.value = true;
+  };
+
+  return { data, execute, loading };
+};
+
 export const createUser = async (form: EditableUser) => {
   // Composables
   const alert = useState("alert");
@@ -52,96 +110,6 @@ export const editUser = async (id: string, form: EditableUser) => {
   }
 
   return { data, error };
-};
-
-export const deleteUser = async (id: string) => {
-  // Composables
-  const alert = useState("alert");
-
-  // Call Api
-  const { data, error }: { data: User | null; error: Error | null } =
-    await useFetchApi({
-      url: `/user/${id}`,
-      method: "DELETE",
-    });
-
-  if (error) {
-    alert.value = {
-      type: "error",
-      message: error.message,
-      status: true,
-    };
-  } else {
-    alert.value = {
-      type: "success",
-      message: "Utilisateur supprimé",
-      status: true,
-    };
-  }
-
-  return { data, error };
-};
-
-export const getUser = () => {
-  // Composables
-  const alert = useState("alert");
-
-  // Data
-  const data = ref<User | null>();
-  const loading = ref<boolean>(false);
-
-  // Call api
-  const execute = async (id: string) => {
-    loading.value = true;
-    const {
-      data: response,
-      error,
-    }: { data: User | null; error: Error | null } = await useFetchApi({
-      url: `/user/${id}`,
-    });
-
-    data.value = response;
-    if (error) {
-      alert.value = {
-        type: "error",
-        message: error.message,
-        status: true,
-      };
-    }
-    loading.value = true;
-  };
-
-  return { data, execute, loading };
-};
-
-export const listUser = () => {
-  // Composables
-  const alert = useState("alert");
-
-  // Data
-  const data = ref<Pagination<User> | null>();
-
-  // Call api
-  const execute = async (params: { page?: number; search?: string }) => {
-    const { data: response, error }: { data: null; error: Error | null } =
-      await useFetchApi({
-        url: "/user",
-        params: params,
-      });
-
-    data.value = response;
-
-    if (error) {
-      alert.value = {
-        type: "error",
-        message:
-          "Il y a eu une erreur lors de la récupération des utilisateurs",
-        status: true,
-      };
-    }
-  };
-
-  return { data, execute };
 };
 
 export const updateUser = async (form: {

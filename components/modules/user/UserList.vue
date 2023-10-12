@@ -1,16 +1,12 @@
 <script lang="ts" setup>
-import { listUser } from "~/services/UserService";
+import { getUsers } from "~/services/UserService";
 import { User } from "~/types/entity/User";
 import { getRole, getRoleColor } from "@/helpers/role";
-
-// Composables
-const { data, execute } = await listUser();
 
 // Data
 const searchText = ref<string>("");
 const page = ref<number>(1);
 const user = useState<User>("user");
-const loading = ref<boolean>(true);
 const headers = [
   {
     label: "id",
@@ -42,22 +38,21 @@ const headers = [
   },
 ];
 
-// Functions
-const load = async () => {
-  await execute({ page: page.value, search: searchText.value });
-};
+// Data
+const { loading, data, execute } = useAsyncData({
+  promise: () =>
+    getUsers({
+      search: searchText.value,
+      page: page.value,
+    }),
+});
 
+// Functions
 const search = (text: string) => {
   searchText.value = text;
   page.value = 1;
-  load();
+  execute();
 };
-
-onMounted(async () => {
-  loading.value = true;
-  await load();
-  loading.value = false;
-});
 </script>
 <template>
   <div>
@@ -73,13 +68,11 @@ onMounted(async () => {
       <template #content>
         <ui-table
           :headers="headers"
-          :items="data?.data"
-          :number-of-page="data?.last_page"
-          :curent-page="data?.current_page"
+          :data="data"
           :loading="loading"
           @page="
             page = $event;
-            load();
+            execute();
           "
         >
           <template #item-client="{ item }">
