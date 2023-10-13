@@ -19,7 +19,12 @@ export const ADMIN_ROUTES: RouteLink[] = [
       {
         label: "Utilisateurs",
         name: "modules-user",
-        routes: ["modules-user", "modules-user-id", "modules-user-create"],
+        routes: [
+          "modules-user",
+          "modules-user-create",
+          "modules-user-edit-id",
+          "modules-user-view-id",
+        ],
       },
     ],
   },

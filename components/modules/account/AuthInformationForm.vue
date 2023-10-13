@@ -41,32 +41,30 @@ const { submit: save, saving } = useAsyncSubmit({
 </script>
 <template>
   <ui-card title="Informations de connexion">
-    <template #content>
-      <div class="grid grid-cols-2 gap-x-4">
-        <ui-form-input-text
-          name="email"
-          type="text"
-          label="Email"
-          placeholder="jean.dupont@mail.com"
-          disabled
-          class="col-span-2"
-        />
-        <ui-form-input-text
-          name="password"
-          type="password"
-          label="Mot de passe"
-          placeholder="*********"
-          autocomplete="off"
-        />
-        <ui-form-input-text
-          name="new_password"
-          type="password"
-          label="Nouveau mot de passe"
-          placeholder="*********"
-          autocomplete="off"
-        />
-      </div>
-    </template>
+    <div class="grid grid-cols-2 gap-x-4">
+      <ui-form-input-text
+        name="email"
+        type="text"
+        label="Email"
+        placeholder="jean.dupont@mail.com"
+        disabled
+        class="col-span-2"
+      />
+      <ui-form-input-text
+        name="password"
+        type="password"
+        label="Mot de passe"
+        placeholder="*********"
+        autocomplete="off"
+      />
+      <ui-form-input-text
+        name="new_password"
+        type="password"
+        label="Nouveau mot de passe"
+        placeholder="*********"
+        autocomplete="off"
+      />
+    </div>
     <template #bottomActions>
       <ui-button @click="submit()" :loading="saving">Modifier</ui-button>
     </template>

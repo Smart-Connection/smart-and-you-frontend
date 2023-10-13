@@ -129,58 +129,54 @@ const searchClient = (text: string) => {
       v-if="data.firstname"
       class="col-span-2 md:col-span-1"
     >
-      <template #content>
-        <ui-form-input-text
-          name="firstname"
-          type="text"
-          placeholder="Jean"
-          label="Prénom"
-          required
-          :disabled="disabled"
-        />
-        <ui-form-input-text
-          name="lastname"
-          type="text"
-          placeholder="Dupont"
-          label="Nom"
-          required
-          :disabled="disabled"
-        />
-      </template>
+      <ui-form-input-text
+        name="firstname"
+        type="text"
+        placeholder="Jean"
+        label="Prénom"
+        required
+        :disabled="disabled"
+      />
+      <ui-form-input-text
+        name="lastname"
+        type="text"
+        placeholder="Dupont"
+        label="Nom"
+        required
+        :disabled="disabled"
+      />
     </ui-card>
     <ui-card
       title="Informations d'authentification"
       :class="!data.firstname ? ' md:col-span-2' : 'col-span-2 md:col-span-1'"
     >
-      <template #content>
-        <ui-form-input-text
-          name="email"
-          type="text"
-          label="Email"
-          required
-          placeholder="jean.dupont@mail.com"
-          :disabled="disabled"
-        />
-        <ui-form-input-select
-          name="role"
-          label="Rôle"
-          :items="getRoleList(disabled)"
-          required
-          :disabled="disabled"
-        />
-        <ui-form-input-comboboxe
-          v-if="authUser.role === 'SUPER_ADMIN'"
-          name="client_id"
-          item-key="id"
-          item-label="name"
-          label="Client"
-          required
-          :items="clients"
-          :default="data.client"
-          @change="searchClient"
-          placeholder="Chercher un client"
-        />
-      </template>
+      <ui-form-input-text
+        name="email"
+        type="text"
+        label="Email"
+        required
+        placeholder="jean.dupont@mail.com"
+        :disabled="disabled"
+      />
+      <ui-form-input-select
+        name="role"
+        label="Rôle"
+        :items="getRoleList(disabled)"
+        required
+        :disabled="disabled"
+      />
+      <ui-form-input-comboboxe
+        v-if="authUser.role === 'SUPER_ADMIN'"
+        name="client_id"
+        item-key="id"
+        item-label="name"
+        label="Client"
+        required
+        :items="clients"
+        :default="data.client"
+        @change="searchClient"
+        placeholder="Chercher un client"
+      />
     </ui-card>
     <div class="flex items-center justify-end col-span-2">
       <ui-delete-modal

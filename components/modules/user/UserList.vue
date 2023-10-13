@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { PencilIcon, EyeIcon } from "@heroicons/vue/24/solid";
 import { getUsers } from "~/services/UserService";
 import { User } from "~/types/entity/User";
 import { getRole, getRoleColor } from "@/helpers/role";
@@ -31,6 +32,7 @@ const headers = [
   {
     label: "Actions",
     key: "action",
+    align: "center",
   },
 ];
 
@@ -61,45 +63,45 @@ const search = (text: string) => {
       <template #headerActions>
         <ui-search @search="search($event)" />
       </template>
-      <template #content>
-        <ui-table
-          :headers="headers"
-          :data="data"
-          :loading="loading"
-          @page="
-            page = $event;
-            execute();
-          "
-        >
-          <template #item-client="{ item }">
-            <nuxt-link
-              class="text-blue-800"
-              v-if="user.role === 'SUPER_ADMIN' && item.client_id"
-              :to="`/modules/client/view/${item.client.id}`"
-            >
-              {{ item.client.name }}
-            </nuxt-link>
-            <p v-else-if="item.client_id">{{ item.client.name }}</p>
-          </template>
-          <template #item-role="{ item }">
-            <ui-label :color="getRoleColor(item.role)">
-              {{ getRole(item.role) }}
-            </ui-label>
-          </template>
-          <template #item-action="{ item }">
-            <nuxt-link
-              v-if="
-                user.role === 'SUPER_ADMIN' ||
-                (user.role === 'ADMIN' && item.role != 'SUPER_ADMIN')
-              "
-              class="text-blue-800"
-              :to="`/modules/user/edit/${item.id}`"
-            >
-              Modifier
-            </nuxt-link>
-          </template>
-        </ui-table>
-      </template>
+      <ui-table
+        :headers="headers"
+        :data="data"
+        :loading="loading"
+        @page="
+          page = $event;
+          execute();
+        "
+      >
+        <template #item-client="{ item }">
+          <nuxt-link
+            class="text-blue-800"
+            v-if="user.role === 'SUPER_ADMIN' && item.client_id"
+            :to="`/modules/client/view/${item.client.id}`"
+          >
+            {{ item.client.name }}
+          </nuxt-link>
+          <p v-else-if="item.client_id">{{ item.client.name }}</p>
+        </template>
+        <template #item-role="{ item }">
+          <ui-label :color="getRoleColor(item.role)">
+            {{ getRole(item.role) }}
+          </ui-label>
+        </template>
+        <template #item-action="{ item }">
+          <ui-action-button :to="`/modules/user/view/${item.id}`">
+            <EyeIcon class="w-4 h-4" />
+          </ui-action-button>
+          <ui-action-button
+            v-if="
+              user.role === 'SUPER_ADMIN' ||
+              (user.role === 'ADMIN' && item.role != 'SUPER_ADMIN')
+            "
+            :to="`/modules/user/edit/${item.id}`"
+          >
+            <PencilIcon class="w-4 h-4" />
+          </ui-action-button>
+        </template>
+      </ui-table>
     </ui-card>
   </div>
 </template>

@@ -1,23 +1,21 @@
 <template>
   <ui-card title="Informations personnel">
-    <template #content>
-      <div class="grid grid-cols-2 gap-4">
-        <ui-form-input-text
-          name="firstname"
-          type="text"
-          label="Prénom"
-          placeholder="Jean"
-          required
-        />
-        <ui-form-input-text
-          name="lastname"
-          type="text"
-          label="Nom"
-          placeholder="Dupont"
-          required
-        />
-      </div>
-    </template>
+    <div class="grid grid-cols-2 gap-4">
+      <ui-form-input-text
+        name="firstname"
+        type="text"
+        label="Prénom"
+        placeholder="Jean"
+        required
+      />
+      <ui-form-input-text
+        name="lastname"
+        type="text"
+        label="Nom"
+        placeholder="Dupont"
+        required
+      />
+    </div>
     <template #bottomActions>
       <ui-button @click="submit()" :loading="loading">Modifier</ui-button>
     </template>

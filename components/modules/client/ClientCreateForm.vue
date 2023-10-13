@@ -49,54 +49,50 @@ const { submit: save, saving } = useAsyncSubmit({
   <ui-page-header title="Création d'un client" :breadcrumbs="breadcrumbs" />
   <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <ui-card title="Informations">
-      <template #content>
-        <ui-form-input-text
-          name="name"
-          type="text"
-          label="Nom"
-          required
-          placeholder="Mon entreprise"
-        />
-        <ui-form-input-text
-          name="siret"
-          type="text"
-          label="Siret"
-          required
-          placeholder="12345678901234"
-        />
-      </template>
+      <ui-form-input-text
+        name="name"
+        type="text"
+        label="Nom"
+        required
+        placeholder="Mon entreprise"
+      />
+      <ui-form-input-text
+        name="siret"
+        type="text"
+        label="Siret"
+        required
+        placeholder="12345678901234"
+      />
     </ui-card>
     <ui-card title="Adresse">
-      <template #content>
-        <ui-form-input-text
-          name="address"
-          type="text"
-          label="Adresse"
-          required
-          placeholder="1 avenue du louvre"
-        />
-        <ui-form-input-text
-          name="zipcode"
-          type="text"
-          label="Code postal"
-          required
-          placeholder="75001"
-        />
-        <ui-form-input-text
-          name="city"
-          type="text"
-          label="Ville"
-          required
-          placeholder="Paris"
-        />
-        <ui-form-input-text
-          name="country"
-          type="text"
-          label="Pays"
-          required
-          placeholder="France"
-        />
-      </template>
+      <ui-form-input-text
+        name="address"
+        type="text"
+        label="Adresse"
+        required
+        placeholder="1 avenue du louvre"
+      />
+      <ui-form-input-text
+        name="zipcode"
+        type="text"
+        label="Code postal"
+        required
+        placeholder="75001"
+      />
+      <ui-form-input-text
+        name="city"
+        type="text"
+        label="Ville"
+        required
+        placeholder="Paris"
+      />
+      <ui-form-input-text
+        name="country"
+        type="text"
+        label="Pays"
+        required
+        placeholder="France"
+      />
     </ui-card>
   </div>
 

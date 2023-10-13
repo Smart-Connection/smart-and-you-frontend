@@ -1,21 +1,15 @@
 <script lang="ts" setup>
 import { getClient } from "~/services/ClientService";
-import {useAsyncData} from "~/composables/useAsyncData";
-
+import { useAsyncData } from "~/composables/useAsyncData";
 
 // Composable
-const router = useRouter();
 const route = useRoute();
+const id = route.params.id as string;
 
 // Data
-const {
-  loading,
-  data,
-  error
-} = useAsyncData({
-  promise: () =>
-      getClient('9a47b73e-e2fc-4e36-aa4d-1883599f75be')
-})
+const { loading, data, error } = useAsyncData({
+  promise: () => getClient(id),
+});
 
 // Breadcrumbs
 const breadcrumbs = computed(() => [
@@ -23,17 +17,32 @@ const breadcrumbs = computed(() => [
     label: "List des clients",
     path: "/modules/client",
   },
-  // {
-  //   label: client.value?.name ?? "...",
-  //   path: client.value?.id
-  //     ? `/modules/client/${client.value.id}`
-  //     : "/modules/client/create",
-  // },
+  {
+    label: data.value?.name ?? "Client",
+    path: data.value?.id ? `/modules/client/view/${data.value.id}` : "#",
+  },
 ]);
+
+// Fields
+const fields = computed(() => {
+  if (!data.value) return [];
+
+  return [
+    { label: "ID", value: data.value.id },
+    { label: "Nom de l'entreprise", value: data.value.name },
+    { label: "Siret", value: data.value.siret },
+    { label: "Adresse", value: data.value.address },
+    { label: "Ville", value: data.value.city },
+    { label: "Code postal", value: data.value.zipcode },
+    { label: "Pays", value: data.value.country },
+  ];
+});
 </script>
 <template>
-  <ui-page-header title="Création d'un client" :breadcrumbs="breadcrumbs" />
-  {{ loading }}
-  {{ data }}
-  {{ error }}
+  <ui-page-header :title="data?.name ?? 'Client'" :breadcrumbs="breadcrumbs">
+    <nuxt-link :to="`/modules/client/edit/${id}`">
+      <ui-button>Modifier</ui-button>
+    </nuxt-link>
+  </ui-page-header>
+  <ui-table-info :loading="loading" :fields="fields" />
 </template>

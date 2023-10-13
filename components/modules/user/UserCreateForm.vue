@@ -70,31 +70,29 @@ const searchClient = (text: string) => {
     :breadcrumbs="breadcrumbs"
   />
   <ui-card title="Informations d'authentification">
-    <template #content>
-      <ui-form-input-text
-        name="email"
-        type="text"
-        label="Email"
-        required
-        placeholder="jean.dupont@mail.com"
-      />
-      <ui-form-input-select
-        name="role"
-        label="Rôle"
-        :items="getRoleList()"
-        required
-      />
-      <ui-form-input-comboboxe
-        name="client"
-        item-key="id"
-        item-label="name"
-        label="Client"
-        required
-        :items="clients"
-        @change="searchClient"
-        placeholder="Chercher un client"
-      />
-    </template>
+    <ui-form-input-text
+      name="email"
+      type="text"
+      label="Email"
+      required
+      placeholder="jean.dupont@mail.com"
+    />
+    <ui-form-input-select
+      name="role"
+      label="Rôle"
+      :items="getRoleList()"
+      required
+    />
+    <ui-form-input-comboboxe
+      name="client"
+      item-key="id"
+      item-label="name"
+      label="Client"
+      required
+      :items="clients"
+      @change="searchClient"
+      placeholder="Chercher un client"
+    />
   </ui-card>
   <div class="flex items-center justify-end mt-4">
     <ui-button @click="submit" :loading="saving"> Ajouter </ui-button>

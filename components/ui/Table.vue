@@ -4,7 +4,7 @@ import { Pagination } from "~/types/api/Global";
 
 const emits = defineEmits(["page"]);
 const props = defineProps<{
-  headers: { label: string; key: string }[];
+  headers: { label: string; key: string; align?: string }[];
   data: Pagination<any[]> | null;
   loading?: boolean;
 }>();
@@ -38,6 +38,11 @@ const nextPage = () => {
                   v-for="header in headers"
                   scope="col"
                   class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-0"
+                  :class="
+                    header.align === 'center'
+                      ? 'flex items-center justify-center'
+                      : ''
+                  "
                 >
                   {{ header.label }}
                 </th>
@@ -68,6 +73,11 @@ const nextPage = () => {
                   :key="`td-${header.key}`"
                   v-for="header in headers"
                   class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
+                  :class="
+                    header.align === 'center'
+                      ? 'flex items-center justify-center space-x-1'
+                      : ''
+                  "
                 >
                   <slot :name="`item-${header.key}`" :item="element">
                     {{ element[header.key] ?? "--" }}

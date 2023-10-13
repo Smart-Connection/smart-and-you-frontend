@@ -55,6 +55,7 @@ const submit = handleSubmit(async (values) => {
 const { submit: save, saving } = useAsyncSubmit({
   submitApiCall: () => editClient(id, values),
   messages: { success: "Client modifié avec succès" },
+  callbackSuccess: () => router.push(`/modules/client/view/${id}`),
 });
 
 const { deleteFunction, deleting } = useAsyncDelete({
@@ -71,54 +72,50 @@ const { deleteFunction, deleting } = useAsyncDelete({
   <ui-page-loader v-if="loading" />
   <div v-if="data && !loading" class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <ui-card title="Informations" class="col-span-2 md:col-span-1">
-      <template #content>
-        <ui-form-input-text
-          name="name"
-          type="text"
-          label="Nom"
-          required
-          placeholder="Mon entreprise"
-        />
-        <ui-form-input-text
-          name="siret"
-          type="text"
-          label="Siret"
-          required
-          placeholder="12345678901234"
-        />
-      </template>
+      <ui-form-input-text
+        name="name"
+        type="text"
+        label="Nom"
+        required
+        placeholder="Mon entreprise"
+      />
+      <ui-form-input-text
+        name="siret"
+        type="text"
+        label="Siret"
+        required
+        placeholder="12345678901234"
+      />
     </ui-card>
     <ui-card title="Adresse" class="col-span-2 md:col-span-1">
-      <template #content>
-        <ui-form-input-text
-          name="address"
-          type="text"
-          label="Adresse"
-          required
-          placeholder="1 avenue du louvre"
-        />
-        <ui-form-input-text
-          name="zipcode"
-          type="text"
-          label="Code postal"
-          required
-          placeholder="75001"
-        />
-        <ui-form-input-text
-          name="city"
-          type="text"
-          label="Ville"
-          required
-          placeholder="Paris"
-        />
-        <ui-form-input-text
-          name="country"
-          type="text"
-          label="Pays"
-          required
-          placeholder="France"
-        />
-      </template>
+      <ui-form-input-text
+        name="address"
+        type="text"
+        label="Adresse"
+        required
+        placeholder="1 avenue du louvre"
+      />
+      <ui-form-input-text
+        name="zipcode"
+        type="text"
+        label="Code postal"
+        required
+        placeholder="75001"
+      />
+      <ui-form-input-text
+        name="city"
+        type="text"
+        label="Ville"
+        required
+        placeholder="Paris"
+      />
+      <ui-form-input-text
+        name="country"
+        type="text"
+        label="Pays"
+        required
+        placeholder="France"
+      />
     </ui-card>
 
     <div class="flex items-center justify-end col-span-2">

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import { PencilIcon, EyeIcon } from "@heroicons/vue/24/solid";
 import { getClients } from "~/services/ClientService";
 
 // Data
@@ -28,6 +29,7 @@ const headers = [
   {
     label: "Actions",
     key: "action",
+    align: "center",
   },
 ];
 
@@ -58,29 +60,27 @@ const search = (text: string) => {
       <template #headerActions>
         <ui-search @search="search($event)" />
       </template>
-      <template #content>
-        <ui-table
-          :headers="headers"
-          :data="data"
-          :loading="loading"
-          @page="
-            page = $event;
-            execute();
-          "
-        >
-          <template #item-users="{ item }">
-            <ui-label color="blue">{{ item.users.length }}</ui-label>
-          </template>
-          <template #item-action="{ item }">
-            <nuxt-link
-              class="text-blue-800"
-              :to="`/modules/client/edit/${item.id}`"
-            >
-              Modifier
-            </nuxt-link>
-          </template>
-        </ui-table>
-      </template>
+      <ui-table
+        :headers="headers"
+        :data="data"
+        :loading="loading"
+        @page="
+          page = $event;
+          execute();
+        "
+      >
+        <template #item-users="{ item }">
+          <ui-label color="blue">{{ item.users.length }}</ui-label>
+        </template>
+        <template #item-action="{ item }">
+          <ui-action-button :to="`/modules/client/view/${item.id}`">
+            <EyeIcon class="w-4 h-4" />
+          </ui-action-button>
+          <ui-action-button :to="`/modules/client/edit/${item.id}`">
+            <PencilIcon class="w-4 h-4" />
+          </ui-action-button>
+        </template>
+      </ui-table>
     </ui-card>
   </div>
 </template>
