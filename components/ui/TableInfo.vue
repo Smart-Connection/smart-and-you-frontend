@@ -46,7 +46,7 @@ const columnFields = computed(() => {
     <ui-card v-for="(fieldsList, index) in columnFields" :key="index">
       <table class="w-full divide-gray-300 divide-y">
         <tr v-for="field in fieldsList">
-          <td class="w-[30%] text-gray-900 font-medium p-2.5">
+          <td class="text-gray-900 font-medium p-2.5">
             {{ field.label }}
           </td>
           <td>

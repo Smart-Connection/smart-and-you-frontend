@@ -2,6 +2,7 @@ import type { RouteLink } from "@/types/router/Routes";
 import {
   BuildingOfficeIcon,
   ChartBarSquareIcon,
+  CurrencyEuroIcon,
 } from "@heroicons/vue/24/outline";
 
 // Super admin routes list
@@ -37,6 +38,12 @@ export const SUPER_ADMIN_ROUTES: RouteLink[] = [
         ],
       },
     ],
+  },
+  {
+    label: "Prestations",
+    icon: CurrencyEuroIcon,
+    name: "modules-contract",
+    routes: ["modules-contract", "modules-contract-view-id"],
   },
   {
     label: "Profil",

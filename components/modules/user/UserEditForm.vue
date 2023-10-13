@@ -20,7 +20,7 @@ const schema = yup.object().shape({
   role: yup.string().required("Le rôle est requis"),
   firstname: yup.string().required("Le prénom est requis"),
   lastname: yup.string().required("Le nom est requis"),
-  client_id: yup.string().required("Le client est requis"),
+  client_id: yup.string(),
 });
 
 // Composable

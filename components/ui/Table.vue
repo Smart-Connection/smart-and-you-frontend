@@ -5,7 +5,7 @@ import { Pagination } from "~/types/api/Global";
 const emits = defineEmits(["page"]);
 const props = defineProps<{
   headers: { label: string; key: string; align?: string }[];
-  data: Pagination<any[]> | null;
+  data: Pagination<any[]> | null | any;
   loading?: boolean;
 }>();
 
@@ -72,7 +72,7 @@ const nextPage = () => {
                 <td
                   :key="`td-${header.key}`"
                   v-for="header in headers"
-                  class="whitespace-nowrap py-4 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
+                  class="whitespace-nowrap py-2 pl-4 pr-3 text-sm font-medium text-gray-900 sm:pl-0"
                   :class="
                     header.align === 'center'
                       ? 'flex items-center justify-center space-x-1'

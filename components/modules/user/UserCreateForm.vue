@@ -13,7 +13,7 @@ const schema = yup.object().shape({
     .email("L'email n'est pas valide")
     .required("L'email est requis"),
   role: yup.string().required("Le rôle est requis"),
-  client: yup.string().required("Le client est requis"),
+  client: yup.string(),
 });
 
 // Composable

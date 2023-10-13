@@ -1,8 +1,10 @@
 <script lang="ts" setup>
 import { getUser } from "~/services/UserService";
 import { getRole, getRoleColor } from "@/helpers/role";
+import { User } from "~/types/entity/User";
 
 // Composable
+const user = useState<User>("user");
 const route = useRoute();
 const id = route.params.id as string;
 
@@ -27,20 +29,31 @@ const breadcrumbs = computed(() => [
 
 // Fields
 const fields = computed(() => {
-  if (!data.value) return [];
+  let list: any = [];
+  if (!data.value) return list;
 
-  return [
+  list.push(
     { label: "ID", value: data.value.id },
     { label: "Prénom", value: data.value.firstname },
     { label: "Nom", value: data.value.lastname },
     { label: "Email", value: data.value.email },
-    { key: "role", label: "Rôle", value: data.value.role },
-    {
+    { key: "role", label: "Rôle", value: data.value.role }
+  );
+
+  if (data.value.client) {
+    list.push({
       label: "Client",
       value: data.value.client.name,
       to: `/modules/client/view/${data.value.client.id}`,
-    },
-  ];
+    });
+  } else {
+    list.push({
+      label: "Client",
+      value: "Aucun client associé",
+    });
+  }
+
+  return list;
 });
 </script>
 <template>
@@ -50,7 +63,13 @@ const fields = computed(() => {
     "
     :breadcrumbs="breadcrumbs"
   >
-    <nuxt-link :to="`/modules/client/edit/${id}`">
+    <nuxt-link
+      v-if="
+        user.role === 'SUPER_ADMIN' ||
+        (user.role === 'ADMIN' && data?.role != 'SUPER_ADMIN')
+      "
+      :to="`/modules/client/edit/${id}`"
+    >
       <ui-button>Modifier</ui-button>
     </nuxt-link>
   </ui-page-header>

@@ -36,7 +36,7 @@ const headers = [
   },
 ];
 
-// Data
+// Users
 const { loading, data, execute } = useAsyncData({
   promise: () =>
     getUsers({

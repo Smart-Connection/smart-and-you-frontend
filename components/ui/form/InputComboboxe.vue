@@ -27,7 +27,6 @@ const open = ref(false);
 
 onMounted(() => {
   emits("change", "");
-  console.log(props.default);
   if (props.default) {
     search.value = props.default.name;
   }
