@@ -10,7 +10,7 @@ interface UseAsyncDataArgs<T> {
   callback?: CallableFunction;
 }
 
-export interface UseAsyncDataReturn<T> {
+interface UseAsyncDataReturn<T> {
   execute: () => Promise<void>;
   promise: UseAsyncDataPromise<T>;
   data: Ref<T | null>;

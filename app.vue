@@ -11,7 +11,6 @@
 </template>
 <script lang="ts" setup>
 import { loadUser } from "./services/AuthService";
-import { useAsyncData } from "~/composables/useAsyncData";
 
 const user = useState("user");
 

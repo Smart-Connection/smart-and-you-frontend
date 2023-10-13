@@ -1,5 +1,5 @@
 import type { Ref } from "vue";
-export interface UseAsyncDataReturn<T> {
+interface UseAsyncDataSubmitReturn<T> {
   submit: () => Promise<T>;
   saving: Ref<boolean>;
 }
@@ -9,7 +9,7 @@ export function useAsyncSubmit<T>(options: {
   messages?: { success?: string; error?: string };
   callbackSuccess?: CallableFunction;
   noMessage?: boolean;
-}): UseAsyncDataReturn<T> {
+}): UseAsyncDataSubmitReturn<T> {
   const alert = useState("alert");
   const saving = ref(false);
 

@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { getClient } from "~/services/ClientService";
-import { useAsyncData } from "~/composables/useAsyncData";
 
 // Composable
 const route = useRoute();

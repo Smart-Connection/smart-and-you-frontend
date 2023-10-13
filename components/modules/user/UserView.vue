@@ -1,6 +1,5 @@
 <script lang="ts" setup>
 import { getUser } from "~/services/UserService";
-import { useAsyncData } from "~/composables/useAsyncData";
 import { getRole, getRoleColor } from "@/helpers/role";
 
 // Composable
