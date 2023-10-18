@@ -43,7 +43,12 @@ export const SUPER_ADMIN_ROUTES: RouteLink[] = [
     label: "Prestations",
     icon: CurrencyEuroIcon,
     name: "modules-contract",
-    routes: ["modules-contract", "modules-contract-view-id"],
+    routes: [
+      "modules-contract",
+      "modules-contract-view-id",
+      "modules-contract-edit-id",
+      "modules-contract-create",
+    ],
   },
   {
     label: "Profil",

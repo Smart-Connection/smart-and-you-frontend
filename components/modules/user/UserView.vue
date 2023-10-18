@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getUser } from "~/services/UserService";
+import { getUser, resendEmail } from "~/services/UserService";
 import { getRole, getRoleColor } from "@/helpers/role";
 import { User } from "~/types/entity/User";
 
@@ -68,11 +68,22 @@ const fields = computed(() => {
         user.role === 'SUPER_ADMIN' ||
         (user.role === 'ADMIN' && data?.role != 'SUPER_ADMIN')
       "
-      :to="`/modules/client/edit/${id}`"
+      :to="`/modules/user/edit/${id}`"
     >
       <ui-button>Modifier</ui-button>
     </nuxt-link>
   </ui-page-header>
+  <ui-info
+    v-if="data?.account_creation_token"
+    class="col-span-2 mb-4"
+    type="alert"
+    title="Attention"
+    description="Cet utilisateur n'a pas finalisé sont inscription."
+  >
+    <ui-button color="secondary" @click="resendEmail(id)">
+      Renvoyer l'invitation
+    </ui-button>
+  </ui-info>
   <ui-table-info :loading="loading" :fields="fields">
     <template #item-role="{ item }">
       <ui-label :color="getRoleColor(item.value)">

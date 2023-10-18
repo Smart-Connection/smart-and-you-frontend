@@ -2,12 +2,7 @@
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { getRoleList } from "~/helpers/role";
-import {
-  resendEmail,
-  getUser,
-  editUser,
-  deleteUser,
-} from "~/services/UserService";
+import { getUser, editUser, deleteUser } from "~/services/UserService";
 import { User, EditableUser } from "~/types/entity/User";
 import { getClients } from "~/services/ClientService";
 
@@ -113,17 +108,6 @@ const searchClient = (text: string) => {
   />
   <ui-page-loader v-if="loading" />
   <div v-if="data && !loading" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <ui-info
-      v-if="data.account_creation_token"
-      class="col-span-2"
-      type="alert"
-      title="Attention"
-      description="Cet utilisateur n'a pas finalisé sont inscription."
-    >
-      <ui-button color="secondary" @click="resendEmail(id)">
-        Renvoyer l'invitation
-      </ui-button>
-    </ui-info>
     <ui-card
       title="Informations personnel"
       v-if="data.firstname"
@@ -171,7 +155,6 @@ const searchClient = (text: string) => {
         item-key="id"
         item-label="name"
         label="Client"
-        required
         :items="clients"
         :default="data.client"
         @change="searchClient"

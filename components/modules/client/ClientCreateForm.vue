@@ -41,7 +41,7 @@ const submit = handleSubmit(async (values) => {
 });
 const { submit: save, saving } = useAsyncSubmit({
   submitApiCall: () => createClient(values),
-  messages: { success: "Client modifié avec succès" },
+  messages: { success: "Client correctement créé" },
   callbackSuccess: () => router.push("/modules/client"),
 });
 </script>

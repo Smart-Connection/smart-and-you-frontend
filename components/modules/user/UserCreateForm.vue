@@ -27,7 +27,6 @@ const { handleSubmit, values } = useForm<EditableUser>({
 
 // Data
 const clientSearchText = ref("");
-const loading = ref<boolean>(false);
 const breadcrumbs = [
   {
     label: "List des utilisateurs",
@@ -88,7 +87,6 @@ const searchClient = (text: string) => {
       item-key="id"
       item-label="name"
       label="Client"
-      required
       :items="clients"
       @change="searchClient"
       placeholder="Chercher un client"

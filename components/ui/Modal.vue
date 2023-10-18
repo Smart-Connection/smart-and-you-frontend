@@ -40,18 +40,18 @@ onClickOutside(target, () => (modelValue.value = false));
             <slot name="headerActions" />
           </div>
           <div class="p-4 flex-auto overflow-y-auto">
-            <slot name="content" />
+            <slot />
           </div>
           <div
-            v-if="$slots.bottomActions"
             class="border-t border-gray-200 px-4 py-4 flex items-center justify-end flex-none"
           >
             <ui-button
               color="secondary"
               class="mr-2"
               @click="modelValue = false"
-              >Annuler</ui-button
             >
+              Fermer
+            </ui-button>
             <slot name="bottomActions" />
           </div>
         </div>

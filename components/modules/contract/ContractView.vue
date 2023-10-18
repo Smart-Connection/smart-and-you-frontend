@@ -1,12 +1,13 @@
 <script lang="ts" setup>
-import { getUser } from "~/services/UserService";
-import { getRole, getRoleColor } from "@/helpers/role";
 import { User } from "~/types/entity/User";
-import { getContract } from "~/services/ContractService";
+import { getContract, deleteContract } from "~/services/ContractService";
+import { getStatus } from "~/helpers/contract";
 
 // Composable
+const alert = useState("alert");
 const user = useState<User>("user");
 const route = useRoute();
+const router = useRouter();
 const id = route.params.id as string;
 
 // Data
@@ -22,7 +23,7 @@ const breadcrumbs = computed(() => [
   },
   {
     label: data.value ? data.value.title : "Prestation",
-    path: data.value?.id ? `/modules/user/view/${data.value.id}` : "#",
+    path: data.value?.id ? `/modules/contract/view/${id}` : "#",
   },
 ]);
 
@@ -44,41 +45,57 @@ const fields = computed(() => {
     { label: "Addresse", value: data.value.address },
     { label: "Code postal", value: data.value.zipcode },
     { label: "Ville", value: data.value.city },
-    { label: "Status", value: data.value.status },
+    { label: "Status", value: getStatus(data.value.status) },
     { label: "Email de contact", value: data.value.contact_email },
     { label: "Téléphone de contact", value: data.value.contact_phone },
-    { key: "consultant", label: "Consultant", value: data.value.consultants },
     { label: "Commentaire", value: data.value.comment },
   ];
 });
+
+// Functions
+const removeContract = async () => {
+  try {
+    await deleteContract(id);
+    alert.value = {
+      type: "success",
+      message: "Prestation correctement supprimé",
+      status: true,
+    };
+    router.push("/modules/contract");
+  } catch (e) {
+    alert.value = {
+      type: "success",
+      message: "Une erreur est arrivé lors de la suppression de la prestation",
+      status: true,
+    };
+  }
+};
 </script>
 <template>
   <ui-page-header
     :title="data ? data.title : 'Prestation'"
     :breadcrumbs="breadcrumbs"
   >
-    <nuxt-link
+    <ui-button
       v-if="user.role === 'SUPER_ADMIN'"
+      @click="removeContract"
+      color="error"
+      class="mr-2"
+    >
+      Supprimer
+    </ui-button>
+    <nuxt-link
+      v-if="user.role === 'SUPER_ADMIN' && data?.status === 'OPEN'"
       :to="`/modules/contract/edit/${id}`"
     >
       <ui-button>Modifier</ui-button>
     </nuxt-link>
   </ui-page-header>
-  <ui-table-info :loading="loading" :fields="fields">
-    <template #item-consultant="{ item }">
-      <div v-if="item.value.length > 0">
-        <nuxt-link
-          v-for="(consultant, index) in item.value"
-          class="text-blue-600"
-          :to="`/modules/user/view/${consultant.id}`"
-        >
-          {{ consultant.firstname }}
-          {{
-            consultant.lastname + (item.value.length - 1 !== index ? ", " : "")
-          }}
-        </nuxt-link>
-      </div>
-      <div v-else>Aucun consultant</div>
-    </template>
-  </ui-table-info>
+  <ui-table-info :loading="loading" :fields="fields" />
+  <modules-contract-components-consultant-list
+    v-if="data"
+    :status="data?.status"
+    :consultants="data.consultants"
+    :contract-id="data.id"
+  />
 </template>

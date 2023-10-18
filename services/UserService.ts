@@ -4,6 +4,8 @@ import { EditableUser, User } from "~/types/entity/User";
 export const getUsers = async (params?: {
   search?: string;
   page?: number;
+  per_page?: number;
+  role?: string;
 }): Promise<Pagination<User[]>> => {
   return useFetchApi({
     url: "/user",

@@ -2,7 +2,7 @@
 import { PencilIcon, EyeIcon } from "@heroicons/vue/24/solid";
 import { getContracts } from "~/services/ContractService";
 import { User } from "~/types/entity/User";
-import { getFormat } from "~/helpers/format";
+import { getFormat } from "~/helpers/contract";
 
 // Composables
 const user = useState<User>("user");
@@ -23,6 +23,7 @@ const {
     getContracts({
       search: searchTextOpenContracts.value,
       page: pageOpenContracts.value,
+      status: "OPEN",
     }),
 });
 
@@ -113,7 +114,7 @@ const searchCloseContracts = (text: string) => {
       </template>
       <template #item-consultants="{ item }">
         <ui-label :color="item.consultants.length === 0 ? 'red' : 'green'">
-          {{ item.consultants.length }}
+          {{ item.consultants ? item.consultants.length : "0" }}
         </ui-label>
       </template>
       <template #item-action="{ item }">
