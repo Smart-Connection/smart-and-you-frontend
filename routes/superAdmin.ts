@@ -3,6 +3,7 @@ import {
   BuildingOfficeIcon,
   ChartBarSquareIcon,
   CurrencyEuroIcon,
+  CalendarIcon
 } from "@heroicons/vue/24/outline";
 
 // Super admin routes list
@@ -12,6 +13,12 @@ export const SUPER_ADMIN_ROUTES: RouteLink[] = [
     icon: ChartBarSquareIcon,
     name: "modules-dashboard-super-admin",
     routes: ["modules-dashboard-super-admin"],
+  },
+  {
+    label: "Calendrier",
+    icon: CalendarIcon,
+    name: "modules-calendar",
+    routes: ["modules-calendar"],
   },
   {
     label: "Gestion",

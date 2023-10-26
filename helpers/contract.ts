@@ -39,3 +39,30 @@ export const getStatusList = [
     value: "Terminé",
   },
 ];
+
+// ========================================================== Get type
+export const getTypeColor = (type: string) => {
+  if (type === "QVT") {
+    return "green";
+  }
+};
+
+export const getTypeBackgroundColor = (type: string) => {
+  if (type === "QVT") {
+    return "bg-green-500";
+  }
+  return "bg-gray-300";
+};
+
+export const getType = (type: string) => {
+  if (type === "QVT") {
+    return "Audit QVT";
+  }
+};
+
+export const getTypeList = [
+  {
+    key: "QVT",
+    value: "Audit QVT",
+  },
+];
