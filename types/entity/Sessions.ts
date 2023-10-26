@@ -1,22 +1,20 @@
 import { Client } from "./Client";
+import { Contract } from "./Contract";
 import { User } from "./User";
 
-export interface Contract {
+export interface Session {
   id: string;
-  type: string;
-  start_at: string;
-  end_at: string;
-  client_id: string;
-  format: "FACE_TO_FACE" | "ON_LINE";
   address: string;
   zipcode: string;
   city: string;
-  status: "OPEN" | "CLOSE";
+  contract_id: string;
+  user_id: string;
+  format: string;
+  date: string;
   contact_email: string;
   contact_phone: string;
-  comment: string;
   created_at: string;
   updated_at: string;
-  client: Client;
-  consultants: User[];
+  contract: Contract;
+  consultant: User;
 }
