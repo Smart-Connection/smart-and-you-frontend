@@ -1,14 +1,10 @@
 <script lang="ts" setup>
-import { listClient } from "~/services/ClientService";
-import { User } from "~/types/entity/User";
-
-// Composables
-const { data, execute } = await listClient();
+import { PencilIcon, EyeIcon } from "@heroicons/vue/24/solid";
+import { getClients } from "~/services/ClientService";
 
 // Data
 const searchText = ref<string>("");
 const page = ref<number>(1);
-const loading = ref<boolean>(true);
 const headers = [
   {
     label: "Nom",
@@ -33,25 +29,25 @@ const headers = [
   {
     label: "Actions",
     key: "action",
+    align: "center",
   },
 ];
 
-// Functions
-const load = async () => {
-  await execute({ page: page.value, search: searchText.value });
-};
+// Data
+const { loading, data, execute } = useAsyncData({
+  promise: () =>
+    getClients({
+      search: searchText.value,
+      page: page.value,
+    }),
+});
 
+// Functions
 const search = (text: string) => {
   searchText.value = text;
   page.value = 1;
-  load();
+  execute();
 };
-
-onMounted(async () => {
-  loading.value = true;
-  await load();
-  loading.value = false;
-});
 </script>
 <template>
   <div>
@@ -64,28 +60,27 @@ onMounted(async () => {
       <template #headerActions>
         <ui-search @search="search($event)" />
       </template>
-      <template #content>
-        <ui-table
-          :headers="headers"
-          :items="data?.data"
-          :number-of-page="data?.last_page"
-          :curent-page="data?.current_page"
-          :loading="loading"
-          @page="
-            page = $event;
-            load();
-          "
-        >
-          <template #item-users="{ item }">
-            <ui-label color="blue">{{ item.users.length }}</ui-label>
-          </template>
-          <template #item-action="{ item }">
-            <nuxt-link class="text-blue-800" :to="`/modules/client/${item.id}`">
-              Modifier
-            </nuxt-link>
-          </template>
-        </ui-table>
-      </template>
+      <ui-table
+        :headers="headers"
+        :data="data"
+        :loading="loading"
+        @page="
+          page = $event;
+          execute();
+        "
+      >
+        <template #item-users="{ item }">
+          <ui-label color="blue">{{ item.users.length }}</ui-label>
+        </template>
+        <template #item-action="{ item }">
+          <ui-action-button :to="`/modules/client/view/${item.id}`">
+            <EyeIcon class="w-4 h-4" />
+          </ui-action-button>
+          <ui-action-button :to="`/modules/client/edit/${item.id}`">
+            <PencilIcon class="w-4 h-4" />
+          </ui-action-button>
+        </template>
+      </ui-table>
     </ui-card>
   </div>
 </template>

@@ -1,36 +1,3 @@
-<template>
-  <ui-card title="Informations de connexion">
-    <template #content>
-      <div class="grid grid-cols-2 gap-x-4">
-        <ui-form-input-text
-          name="email"
-          type="text"
-          label="Email"
-          placeholder="jean.dupont@mail.com"
-          disabled
-          class="col-span-2"
-        />
-        <ui-form-input-text
-          name="password"
-          type="password"
-          label="Mot de passe"
-          placeholder="*********"
-          autocomplete="off"
-        />
-        <ui-form-input-text
-          name="new_password"
-          type="password"
-          label="Nouveau mot de passe"
-          placeholder="*********"
-          autocomplete="off"
-        />
-      </div>
-    </template>
-    <template #bottomActions>
-      <ui-button @click="submit()">Modifier</ui-button>
-    </template>
-  </ui-card>
-</template>
 <script lang="ts" setup>
 // Imports
 import * as yup from "yup";
@@ -50,7 +17,7 @@ const schema = yup.object({
 
 // Composables
 const user = useState<User>("user");
-const { handleSubmit } = useForm({
+const { handleSubmit, values } = useForm({
   validationSchema: schema,
   initialValues: {
     email: user.value.email,
@@ -59,12 +26,47 @@ const { handleSubmit } = useForm({
   },
 });
 
+// Submit
 const submit = handleSubmit(async (values) => {
-  loading.value = true;
-  await updatePassword({
-    password: values.password,
-    new_password: values.new_password,
-  });
-  loading.value = false;
+  return save();
+});
+const { submit: save, saving } = useAsyncSubmit({
+  submitApiCall: () =>
+    updatePassword({
+      password: values.password,
+      new_password: values.new_password,
+    }),
+  messages: { success: "Information correctement modifié" },
 });
 </script>
+<template>
+  <ui-card title="Informations de connexion">
+    <div class="grid grid-cols-2 gap-x-4">
+      <ui-form-input-text
+        name="email"
+        type="text"
+        label="Email"
+        placeholder="jean.dupont@mail.com"
+        disabled
+        class="col-span-2"
+      />
+      <ui-form-input-text
+        name="password"
+        type="password"
+        label="Mot de passe"
+        placeholder="*********"
+        autocomplete="off"
+      />
+      <ui-form-input-text
+        name="new_password"
+        type="password"
+        label="Nouveau mot de passe"
+        placeholder="*********"
+        autocomplete="off"
+      />
+    </div>
+    <template #bottomActions>
+      <ui-button @click="submit()" :loading="saving">Modifier</ui-button>
+    </template>
+  </ui-card>
+</template>

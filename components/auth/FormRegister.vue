@@ -2,6 +2,7 @@
 import { register } from "@/services/AuthService";
 import * as yup from "yup";
 import { useForm } from "vee-validate";
+import { LoginResponse } from "~/types/api/Auth";
 
 // Form
 const schema = yup.object({
@@ -13,7 +14,7 @@ const schema = yup.object({
     .oneOf([yup.ref("password")], "Les mots de passe doivent correspondre")
     .required("Le mot de passe est requis"),
 });
-const { handleSubmit } = useForm<{
+const { handleSubmit, values } = useForm<{
   firstname: string;
   lastname: string;
   password: string;
@@ -25,20 +26,17 @@ const { handleSubmit } = useForm<{
 // Composables
 const alert = useState("alert");
 const route = useRoute();
+const router = useRouter();
+const config = useRuntimeConfig();
+const token = useCookie("token", {
+  maxAge: parseInt(config.public.maxAuthCookieAge),
+});
+const user = useState("user");
 
 // Data
-const loading = ref<boolean>(false);
-
-const submit = handleSubmit(async (values) => {
-  loading.value = true;
-  console.log(route.query);
+const submit = handleSubmit(() => {
   if (route.query.token) {
-    await register({
-      firstname: values.firstname,
-      lastname: values.lastname,
-      password: values.password,
-      account_creation_token: route.query.token as string,
-    });
+    return save();
   } else {
     alert.value = {
       type: "error",
@@ -46,8 +44,22 @@ const submit = handleSubmit(async (values) => {
       status: true,
     };
   }
-
-  loading.value = false;
+});
+const { submit: save, saving } = useAsyncSubmit({
+  submitApiCall: () =>
+    register({
+      firstname: values.firstname,
+      lastname: values.lastname,
+      password: values.password,
+      account_creation_token: route.query.token as string,
+    }),
+  callbackSuccess: (data: LoginResponse) => {
+    token.value = data.authorization.token;
+    user.value = data.user;
+    const { home } = useRouteList();
+    router.push({ name: home?.name });
+  },
+  noMessage: true,
 });
 </script>
 <template>
@@ -87,7 +99,7 @@ const submit = handleSubmit(async (values) => {
         <ui-button
           color="primary"
           type="submit"
-          :loading="loading"
+          :loading="saving"
           block
           class="mt-10"
         >

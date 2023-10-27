@@ -9,8 +9,8 @@ export const ADMIN_ROUTES: RouteLink[] = [
   {
     label: "Dashboard",
     icon: ChartBarSquareIcon,
-    name: "modules-dashboard-super-admin",
-    routes: ["modules-dashboard-super-admin"],
+    name: "modules-dashboard-admin",
+    routes: ["modules-dashboard-admin"],
   },
   {
     label: "Gestion",
@@ -19,7 +19,12 @@ export const ADMIN_ROUTES: RouteLink[] = [
       {
         label: "Utilisateurs",
         name: "modules-user",
-        routes: ["modules-user", "modules-user-id", "modules-user-create"],
+        routes: [
+          "modules-user",
+          "modules-user-create",
+          "modules-user-edit-id",
+          "modules-user-view-id",
+        ],
       },
     ],
   },

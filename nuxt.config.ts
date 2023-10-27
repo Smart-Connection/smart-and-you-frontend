@@ -17,8 +17,8 @@ export default defineNuxtConfig({
   },
   runtimeConfig: {
     public: {
-      apiUrl: "",
-      maxAuthCookieAge: "",
+      apiUrl: process.env.NUXT_PUBLIC_API_URL,
+      maxAuthCookieAge: process.env.NUXT_PUBLIC_MAX_AUTH_COOKIE_AGE,
     },
   },
   vite: {

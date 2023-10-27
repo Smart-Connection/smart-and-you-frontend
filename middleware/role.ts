@@ -1,5 +1,4 @@
-import { Error } from "~/types/api/Global";
-import { User } from "~/types/entity/User";
+import { getMe } from "~/services/UserService";
 
 export default defineNuxtRouteMiddleware(async (to, from) => {
   // Composable
@@ -7,14 +6,21 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const token = useCookie("token", {
     maxAge: parseInt(config.public.maxAuthCookieAge),
   });
+
+  const { execute, data } = useAsyncData({
+    promise: () => getMe(),
+    options: {
+      immediate: false,
+    },
+  });
+
   const user = useState("user");
   const { links, home } = useRouteList();
 
   if (!token.value) return navigateTo("/auth/login");
 
   if (!user.value) {
-    const { data, error }: { data: User | null; error: Error | null } =
-      await useFetchApi({ url: "/me" });
+    await execute();
 
     if (!data) return navigateTo("/auth/login");
     user.value = data;

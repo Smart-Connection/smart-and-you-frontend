@@ -7,7 +7,7 @@ export interface User {
   email_verified_at: string;
   firstname: string;
   lastname: string;
-  role: "SUPER_ADMIN" | "ADMIN" | "USER";
+  role: "SUPER_ADMIN" | "ADMIN" | "USER" | "CONSULTANT";
   client_id: string;
   client: Client;
   updated_at: string;
@@ -19,5 +19,5 @@ export interface EditableUser {
   firstname?: string;
   lastname?: string;
   client_id?: string;
-  role?: "SUPER_ADMIN" | "ADMIN" | "USER";
+  role?: "SUPER_ADMIN" | "ADMIN" | "USER" | "CONSULTANT";
 }

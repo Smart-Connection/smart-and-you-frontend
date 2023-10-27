@@ -10,16 +10,19 @@ import { ExclamationTriangleIcon } from "@heroicons/vue/24/outline";
 
 // Emit & Props
 const emit = defineEmits(["confirm"]);
-const props = defineProps<{
+defineProps<{
   description: string;
   title: string;
+  loading: boolean;
 }>();
 
 // Data
 const open = ref(false);
 </script>
 <template>
-  <ui-button color="error" @click="open = true"> Supprimer </ui-button>
+  <ui-button color="error" :loading="loading" @click="open = true">
+    Supprimer
+  </ui-button>
   <TransitionRoot as="template" :show="open">
     <Dialog as="div" class="relative z-10" @close="open = false">
       <TransitionChild

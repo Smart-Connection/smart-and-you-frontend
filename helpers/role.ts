@@ -7,6 +7,8 @@ export const getRole = (role: User["role"]) => {
     return "Super administrateur";
   } else if (role === "USER") {
     return "Utilisateur";
+  } else if (role === "CONSULTANT") {
+    return "Consultant";
   }
 };
 
@@ -17,6 +19,8 @@ export const getRoleColor = (role: User["role"]) => {
     return "red";
   } else if (role === "USER") {
     return "blue";
+  } else if (role === "CONSULTANT") {
+    return "green";
   } else {
     return "gray";
   }
@@ -38,10 +42,16 @@ export const getRoleList = (all?: boolean) => {
     });
   }
   if (all || user.value.role === "SUPER_ADMIN") {
-    roles.push({
-      key: "SUPER_ADMIN",
-      value: "Super administrateur",
-    });
+    roles.push(
+      {
+        key: "SUPER_ADMIN",
+        value: "Super administrateur",
+      },
+      {
+        key: "CONSULTANT",
+        value: "Consultant",
+      }
+    );
   }
 
   return roles;

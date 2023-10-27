@@ -1,12 +1,12 @@
 import axios from "axios";
-import { Error } from "~/types/api/Global";
+import { Pagination, Error } from "~/types/api/Global";
 
 export const useFetchApi = async <T>(options: {
   url: string;
   method?: "GET" | "POST" | "DELETE" | "PUT";
   body?: any;
   params?: any;
-}): Promise<{ data: T | null; error: Error | null }> => {
+}) => {
   // Composable
   const config = useRuntimeConfig();
   const token = useCookie("token", {
@@ -32,16 +32,9 @@ export const useFetchApi = async <T>(options: {
     });
 
     const data = apiResponse.data;
-    const error = null;
 
-    return { data, error };
+    return data;
   } catch (e: any) {
-    const data = null;
-    const error: Error = {
-      message: e.response.data?.message || "",
-      code: e.response.status,
-    };
-
-    return { data, error };
+    throw e;
   }
 };

@@ -11,10 +11,13 @@
 </template>
 <script lang="ts" setup>
 import { loadUser } from "./services/AuthService";
-const loading = ref<boolean>(true);
 
-// Load user
-loading.value = true;
-await loadUser();
-loading.value = false;
+const user = useState("user");
+
+const { loading, data } = useAsyncData({
+  promise: () => loadUser(),
+  callback: () => {
+    user.value = data.value;
+  },
+});
 </script>
