@@ -15,7 +15,7 @@ jobs:
       - name: Publish backend to Registry
         uses: elgohr/Publish-Docker-Github-Action@v5
         env:
-          NUXT_PUBLIC_API_URL: http://google.com
+          NUXT_PUBLIC_API_URL: https://preprod.api.smartandyou.com
         with:
           name: smart-connection/smart-fit-packages-frontend
           username: nologin
