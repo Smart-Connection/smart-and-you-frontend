@@ -1,26 +1,37 @@
 import { Pagination } from "~/types/api/Global";
 import { Client } from "~/types/entity/Client";
 
-export const getClients = async (params?: {
+export const fetchClients = async (params?: {
   search?: string;
   page?: number;
   per_page?: number;
+  populate?: string;
 }): Promise<Pagination<Client[]>> => {
   return useFetchApi({
-    url: "/client",
+    url: "/clients",
     params: params,
   });
 };
 
-export const getClient = async (id: string): Promise<Client> => {
+export const fetchClient = async (options: {
+  id: string,
+  params?: {
+    populate?: string,
+  }
+}): Promise<Client> => {
   return useFetchApi<Client>({
-    url: `/client/${id}`,
+    url: `/clients/${options.id}`,
+    params: options.params
   });
 };
 
-export const editClient = async (id: string, form: Client) => {
+export const insertClient = async (form: Client) => {
+  return useFetchApi({ url: "/clients", method: "POST", body: form });
+};
+
+export const updateClient = async (id: string, form: Client) => {
   return useFetchApi({
-    url: `/client/${id}`,
+    url: `/clients/${id}`,
     method: "PUT",
     body: form,
   });
@@ -28,11 +39,7 @@ export const editClient = async (id: string, form: Client) => {
 
 export const deleteClient = async (id: string) => {
   return useFetchApi({
-    url: `/client/${id}`,
+    url: `/clients/${id}`,
     method: "DELETE",
   });
-};
-
-export const createClient = async (form: Client) => {
-  return useFetchApi({ url: "/client", method: "POST", body: form });
 };

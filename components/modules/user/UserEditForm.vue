@@ -2,9 +2,9 @@
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { getRoleList } from "~/helpers/role";
-import { getUser, editUser, deleteUser } from "~/services/UserService";
+import { fetchUser, updateUser, deleteUser } from "~/services/UserService";
 import { User, EditableUser } from "~/types/entity/User";
-import { getClients } from "~/services/ClientService";
+import { fetchClients } from "~/services/ClientService";
 
 // Form
 const schema = yup.object().shape({
@@ -32,7 +32,7 @@ const authUser = useState<User>("user");
 
 // User data
 const { loading, data } = useAsyncData({
-  promise: () => getUser(id),
+  promise: () => fetchUser({ id, params: { populate: "client" } }),
   callback: () => {
     if (data) {
       resetForm({ values: data.value as User });
@@ -43,8 +43,9 @@ const { loading, data } = useAsyncData({
 // Client list
 const { execute: reloadClients, data: clients } = useAsyncData({
   promise: () =>
-    getClients({
+    fetchClients({
       search: clientSearchText.value,
+      page: 1,
       per_page: 5,
     }),
 });
@@ -79,7 +80,7 @@ const submit = handleSubmit(() => {
   return save();
 });
 const { submit: save, saving } = useAsyncSubmit({
-  submitApiCall: () => editUser(id, values),
+  submitApiCall: () => updateUser(id, values),
   messages: { success: "Utilisateur correctement modifié" },
   callbackSuccess: () => router.push("/modules/user"),
 });

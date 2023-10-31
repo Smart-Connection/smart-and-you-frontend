@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { PencilIcon, EyeIcon } from "@heroicons/vue/24/solid";
-import { getUsers } from "~/services/UserService";
+import { fetchUsers } from "~/services/UserService";
 import { User } from "~/types/entity/User";
 import { getRole, getRoleColor } from "@/helpers/role";
 
@@ -39,9 +39,10 @@ const headers = [
 // Users
 const { loading, data, execute } = useAsyncData({
   promise: () =>
-    getUsers({
+    fetchUsers({
       search: searchText.value,
       page: page.value,
+      populate: "client",
     }),
 });
 

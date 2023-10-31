@@ -1,26 +1,33 @@
 import { Pagination } from "~/types/api/Global";
 import { Contract } from "~/types/entity/Contract";
 
-export const getContracts = async (params?: {
+export const fetchContracts = async (params?: {
   search?: string;
   page?: number;
   per_page?: number;
   status?: "OPEN" | "CLOSE";
+  populate?: string,
 }): Promise<Pagination<Contract[]>> => {
   return useFetchApi({
-    url: "/contract",
+    url: "/contracts",
     params: params,
   });
 };
 
-export const getContract = async (id: string): Promise<Contract> => {
+export const fetchContract = async (options: {
+  id: string,
+  params?: {
+    populate?: string,
+  }
+}): Promise<Contract> => {
   return useFetchApi<Contract>({
-    url: `/contract/${id}`,
+    url: `/contracts/${options.id}`,
+    params: options.params
   });
 };
 
-export const createContract = async (form: Contract) => {
-  return useFetchApi({ url: "/contract", method: "POST", body: form });
+export const insertContract = async (form: Contract) => {
+  return useFetchApi({ url: "/contracts", method: "POST", body: form });
 };
 
 export const updateContract = async (form: Contract, id: string) => {
@@ -28,29 +35,5 @@ export const updateContract = async (form: Contract, id: string) => {
 };
 
 export const deleteContract = async (id: string) => {
-  return useFetchApi({ url: `/contract/${id}`, method: "DELETE" });
-};
-
-// =================================================== Consultant
-
-export const addConsultant = async (form: {
-  user_id: string;
-  contract_id: string;
-}) => {
-  return useFetchApi({
-    url: "/contract/consultant",
-    method: "POST",
-    body: form,
-  });
-};
-
-export const removeConsultant = async (
-  form: { user_id: string },
-  id: string
-) => {
-  return useFetchApi({
-    url: `/contract/consultant/${id}`,
-    method: "DELETE",
-    body: form,
-  });
+  return useFetchApi({ url: `/contracts/${id}`, method: "DELETE" });
 };

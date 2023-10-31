@@ -1,7 +1,7 @@
 import { Contract } from "~/types/entity/Contract";
 
 // ========================================================== Format
-export const getFormat = (format: Contract["format"]) => {
+export const getFormat = (format: string) => {
   if (format === "FACE_TO_FACE") {
     return "En présentiel";
   } else if (format === "ON_LINE") {
@@ -21,6 +21,14 @@ export const getFormatList = [
 ];
 
 // ========================================================== Status
+export const getStatusColor = (type: string) => {
+  if (type === "OPEN") {
+    return "green";
+  } else{
+    return "red";
+  }
+};
+
 export const getStatus = (format: Contract["status"]) => {
   if (format === "OPEN") {
     return "En cours";

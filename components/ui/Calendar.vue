@@ -2,7 +2,6 @@
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import isBetween from "dayjs/plugin/isBetween";
-import { getType, getTypeBackgroundColor } from "@/helpers/contract";
 import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/vue/24/solid";
 import { Event } from "~/types/entity/Calendar";
 
@@ -107,6 +106,10 @@ const previousMonth = () => {
 const setAsToday = () => {
   const date = dayjs();
   selectedDay.value = date.format("YYYY-MM-DD");
+  emits("change", {
+    start_at: days.value.at(0),
+    end_at: days.value.at(-1),
+  });
 };
 
 // Init

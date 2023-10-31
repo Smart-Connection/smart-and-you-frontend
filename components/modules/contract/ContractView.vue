@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { User } from "~/types/entity/User";
-import { getContract, deleteContract } from "~/services/ContractService";
-import { getStatus } from "~/helpers/contract";
+import { fetchContract, deleteContract } from "~/services/ContractService";
+import { getStatus, getStatusColor } from "~/helpers/contract";
 
 // Composable
 const alert = useState("alert");
@@ -11,8 +11,8 @@ const router = useRouter();
 const id = route.params.id as string;
 
 // Data
-const { loading, data, error } = useAsyncData({
-  promise: () => getContract(id),
+const { loading, data } = useAsyncData({
+  promise: () => fetchContract({ id, params: { populate: "client" } }),
 });
 
 // Breadcrumbs
@@ -22,7 +22,7 @@ const breadcrumbs = computed(() => [
     path: "/modules/contract",
   },
   {
-    label: data.value ? data.value.title : "Prestation",
+    label: data.value ? data.value.type : "Prestation",
     path: data.value?.id ? `/modules/contract/view/${id}` : "#",
   },
 ]);
@@ -33,22 +33,13 @@ const fields = computed(() => {
 
   return [
     { label: "ID", value: data.value.id },
-    { label: "Titre", value: data.value.title },
-    { label: "Début", value: data.value.start_at },
-    { label: "Fin", value: data.value.end_at },
-    { label: "Format", value: data.value.format },
+    { label: "Type", value: data.value.type },
     {
       label: "Client",
       value: data.value.client.name,
-      to: `/modules/client/view/${data.value.client_id}`,
+      to: `/modules/client/view/${data.value.client.id}`,
     },
-    { label: "Addresse", value: data.value.address },
-    { label: "Code postal", value: data.value.zipcode },
-    { label: "Ville", value: data.value.city },
-    { label: "Status", value: getStatus(data.value.status) },
-    { label: "Email de contact", value: data.value.contact_email },
-    { label: "Téléphone de contact", value: data.value.contact_phone },
-    { label: "Commentaire", value: data.value.comment },
+    { label: "Status", key: "status", value: data.value.status },
   ];
 });
 
@@ -73,7 +64,7 @@ const removeContract = async () => {
 </script>
 <template>
   <ui-page-header
-    :title="data ? data.title : 'Prestation'"
+    :title="data ? data.type : 'Prestation'"
     :breadcrumbs="breadcrumbs"
   >
     <ui-button
@@ -85,17 +76,17 @@ const removeContract = async () => {
       Supprimer
     </ui-button>
     <nuxt-link
-      v-if="user.role === 'SUPER_ADMIN' && data?.status === 'OPEN'"
+      v-if="user.role === 'SUPER_ADMIN'"
       :to="`/modules/contract/edit/${id}`"
     >
       <ui-button>Modifier</ui-button>
     </nuxt-link>
   </ui-page-header>
-  <ui-table-info :loading="loading" :fields="fields" />
-  <modules-contract-components-consultant-list
-    v-if="data"
-    :status="data?.status"
-    :consultants="data.consultants"
-    :contract-id="data.id"
-  />
+  <ui-table-info :loading="loading" :fields="fields">
+    <template #item-status="{ item }">
+      <ui-label :color="getStatusColor(item.value)">
+        {{ getStatus(item.value) }}
+      </ui-label>
+    </template>
+  </ui-table-info>
 </template>

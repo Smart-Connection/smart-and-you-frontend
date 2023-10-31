@@ -49,6 +49,6 @@ const updateDate = (dates: { startAt: string; endAt: string }) => {
 };
 </script>
 <template>
-  <ui-page-header title="Prestations"></ui-page-header>
+  <ui-page-header title="Calendrier"></ui-page-header>
   <ui-calendar @change="updateDate" :events="items" />
 </template>

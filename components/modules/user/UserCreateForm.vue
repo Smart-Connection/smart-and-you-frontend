@@ -2,8 +2,8 @@
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { EditableUser } from "~/types/entity/User";
-import { createUser } from "~/services/UserService";
-import { getClients } from "~/services/ClientService";
+import { insertUser } from "~/services/UserService";
+import { fetchClients } from "~/services/ClientService";
 import { getRoleList } from "~/helpers/role";
 
 // Form
@@ -41,8 +41,9 @@ const breadcrumbs = [
 // Client list
 const { execute: reloadClients, data: clients } = useAsyncData({
   promise: () =>
-    getClients({
+    fetchClients({
       search: clientSearchText.value,
+      page: 1,
       per_page: 5,
     }),
 });
@@ -52,7 +53,7 @@ const submit = handleSubmit(() => {
   return save();
 });
 const { submit: save, saving } = useAsyncSubmit({
-  submitApiCall: () => createUser(values),
+  submitApiCall: () => insertUser(values),
   messages: { success: "Utilisateur correctement créé" },
   callbackSuccess: () => router.push("/modules/user"),
 });

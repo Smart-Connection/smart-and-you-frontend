@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getClient } from "~/services/ClientService";
+import { fetchClient } from "~/services/ClientService";
 
 // Composable
 const route = useRoute();
@@ -7,7 +7,7 @@ const id = route.params.id as string;
 
 // Data
 const { loading, data, error } = useAsyncData({
-  promise: () => getClient(id),
+  promise: () => fetchClient({ id }),
 });
 
 // Breadcrumbs

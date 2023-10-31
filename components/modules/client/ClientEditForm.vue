@@ -1,7 +1,11 @@
 <script lang="ts" setup>
 import * as yup from "yup";
 import { useForm } from "vee-validate";
-import { getClient, editClient, deleteClient } from "~/services/ClientService";
+import {
+  fetchClient,
+  updateClient,
+  deleteClient,
+} from "~/services/ClientService";
 import { Client } from "~/types/entity/Client";
 
 // Form
@@ -28,7 +32,7 @@ const { handleSubmit, resetForm, values } = useForm<Client>({
 
 // Data
 const { loading, data } = useAsyncData({
-  promise: () => getClient(id),
+  promise: () => fetchClient({ id }),
   callback: () => {
     if (data) {
       resetForm({ values: data.value as Client });
@@ -53,7 +57,7 @@ const submit = handleSubmit(async (values) => {
   return save();
 });
 const { submit: save, saving } = useAsyncSubmit({
-  submitApiCall: () => editClient(id, values),
+  submitApiCall: () => updateClient(id, values),
   messages: { success: "Client modifié avec succès" },
   callbackSuccess: () => router.push(`/modules/client/view/${id}`),
 });

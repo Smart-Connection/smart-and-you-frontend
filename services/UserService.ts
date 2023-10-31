@@ -1,31 +1,38 @@
 import { Error, Pagination } from "~/types/api/Global";
 import { EditableUser, User } from "~/types/entity/User";
 
-export const getUsers = async (params?: {
+export const fetchUsers = async (params?: {
   search?: string;
   page?: number;
   per_page?: number;
   role?: string;
+  populate?: string;
 }): Promise<Pagination<User[]>> => {
   return useFetchApi({
-    url: "/user",
+    url: "/users",
     params: params,
   });
 };
 
-export const getUser = (id: string): Promise<User> => {
+export const fetchUser = (options: {
+  id: string,
+  params?: {
+    populate?: string,
+  }
+}): Promise<User> => {
   return useFetchApi({
-    url: `/user/${id}`,
+    url: `/users/${options.id}`,
+    params: options.params
   });
 };
 
-export const createUser = async (form: EditableUser) => {
-  return useFetchApi({ url: "/user", method: "POST", body: form });
+export const insertUser = async (form: EditableUser) => {
+  return useFetchApi({ url: "/users", method: "POST", body: form });
 };
 
-export const editUser = async (id: string, form: EditableUser) => {
+export const updateUser = async (id: string, form: EditableUser) => {
   return useFetchApi({
-    url: `/user/${id}`,
+    url: `/users/${id}`,
     method: "PUT",
     body: form,
   });
@@ -33,7 +40,7 @@ export const editUser = async (id: string, form: EditableUser) => {
 
 export const deleteUser = async (id: string) => {
   return useFetchApi({
-    url: `/user/${id}`,
+    url: `/users/${id}`,
     method: "DELETE",
   });
 };

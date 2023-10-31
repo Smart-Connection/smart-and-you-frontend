@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { getUser, resendEmail } from "~/services/UserService";
+import { fetchUser, resendEmail } from "~/services/UserService";
 import { getRole, getRoleColor } from "@/helpers/role";
 import { User } from "~/types/entity/User";
 
@@ -10,7 +10,13 @@ const id = route.params.id as string;
 
 // Data
 const { loading, data, error } = useAsyncData({
-  promise: () => getUser(id),
+  promise: () =>
+    fetchUser({
+      id,
+      params: {
+        populate: "client",
+      },
+    }),
 });
 
 // Breadcrumbs

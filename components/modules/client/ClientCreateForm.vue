@@ -2,7 +2,7 @@
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { Client } from "~/types/entity/Client";
-import { createClient } from "~/services/ClientService";
+import { insertClient } from "~/services/ClientService";
 
 // Data
 const breadcrumbs = [
@@ -40,7 +40,7 @@ const submit = handleSubmit(async (values) => {
   return save();
 });
 const { submit: save, saving } = useAsyncSubmit({
-  submitApiCall: () => createClient(values),
+  submitApiCall: () => insertClient(values),
   messages: { success: "Client correctement créé" },
   callbackSuccess: () => router.push("/modules/client"),
 });

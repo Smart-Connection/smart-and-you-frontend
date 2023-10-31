@@ -1,6 +1,6 @@
 <script lang="ts" setup>
 import { PencilIcon, EyeIcon } from "@heroicons/vue/24/solid";
-import { getClients } from "~/services/ClientService";
+import { fetchClients } from "~/services/ClientService";
 
 // Data
 const searchText = ref<string>("");
@@ -33,12 +33,13 @@ const headers = [
   },
 ];
 
-// Data
+// API
 const { loading, data, execute } = useAsyncData({
   promise: () =>
-    getClients({
+    fetchClients({
       search: searchText.value,
       page: page.value,
+      populate: "users",
     }),
 });
 
