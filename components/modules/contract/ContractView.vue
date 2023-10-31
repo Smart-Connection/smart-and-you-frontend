@@ -2,6 +2,7 @@
 import { User } from "~/types/entity/User";
 import { fetchContract, deleteContract } from "~/services/ContractService";
 import { getStatus, getStatusColor } from "~/helpers/contract";
+import { PencilIcon } from "@heroicons/vue/24/solid";
 
 // Composable
 const alert = useState("alert");
@@ -43,43 +44,37 @@ const fields = computed(() => {
   ];
 });
 
-// Functions
-const removeContract = async () => {
-  try {
-    await deleteContract(id);
-    alert.value = {
-      type: "success",
-      message: "Prestation correctement supprimé",
-      status: true,
-    };
-    router.push("/modules/contract");
-  } catch (e) {
-    alert.value = {
-      type: "success",
-      message: "Une erreur est arrivé lors de la suppression de la prestation",
-      status: true,
-    };
-  }
-};
+// Delete
+const { deleteFunction, deleting } = useAsyncDelete({
+  delete: () => deleteContract(id),
+  callback: () => router.push("/modules/contract"),
+  messages: {
+    error: "Une erreur est arrivé lors de la suppression de la prestation",
+    success: "Prestation correctement supprimé",
+  },
+});
 </script>
 <template>
   <ui-page-header
     :title="data ? data.type : 'Prestation'"
     :breadcrumbs="breadcrumbs"
   >
-    <ui-button
+    <ui-delete-modal
       v-if="user.role === 'SUPER_ADMIN'"
-      @click="removeContract"
-      color="error"
-      class="mr-2"
-    >
-      Supprimer
-    </ui-button>
+      @confirm="deleteFunction"
+      title="Suppression d'une prestation"
+      :loading="deleting"
+      description="Si vous cliquez sur supprimer, cette prestation sera totalement supprimé et les sessions seront supprimé avec"
+    />
     <nuxt-link
       v-if="user.role === 'SUPER_ADMIN'"
+      class="ml-2"
       :to="`/modules/contract/edit/${id}`"
     >
-      <ui-button>Modifier</ui-button>
+      <ui-button>
+        <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
+        Modifier
+      </ui-button>
     </nuxt-link>
   </ui-page-header>
   <ui-table-info :loading="loading" :fields="fields">

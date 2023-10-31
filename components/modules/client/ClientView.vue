@@ -1,8 +1,10 @@
 <script lang="ts" setup>
-import { fetchClient } from "~/services/ClientService";
+import { fetchClient, deleteClient } from "~/services/ClientService";
+import { PencilIcon } from "@heroicons/vue/24/solid";
 
 // Composable
 const route = useRoute();
+const router = useRouter();
 const id = route.params.id as string;
 
 // Data
@@ -36,11 +38,30 @@ const fields = computed(() => {
     { label: "Pays", value: data.value.country },
   ];
 });
+
+// Delete
+const { deleteFunction, deleting } = useAsyncDelete({
+  delete: () => deleteClient(id),
+  callback: () => router.push("/modules/client"),
+  messages: {
+    error: "Une erreur est arrivé lors de le suppression du client",
+    success: "Client correctement supprimé",
+  },
+});
 </script>
 <template>
   <ui-page-header :title="data?.name ?? 'Client'" :breadcrumbs="breadcrumbs">
-    <nuxt-link :to="`/modules/client/edit/${id}`">
-      <ui-button>Modifier</ui-button>
+    <ui-delete-modal
+      @confirm="deleteFunction"
+      title="Suppression d'un client"
+      :loading="deleting"
+      description="Si vous cliquez sur supprimer, ce client sera totalement supprimé et les utilisateurs n'auront plus d'entreprise associer"
+    />
+    <nuxt-link :to="`/modules/client/edit/${id}`" class="ml-2">
+      <ui-button>
+        <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
+        Modifier
+      </ui-button>
     </nuxt-link>
   </ui-page-header>
   <ui-table-info :loading="loading" :fields="fields" />

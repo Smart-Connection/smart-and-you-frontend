@@ -1,12 +1,9 @@
 <script lang="ts" setup>
 import * as yup from "yup";
 import { useForm } from "vee-validate";
-import {
-  fetchClient,
-  updateClient,
-  deleteClient,
-} from "~/services/ClientService";
+import { fetchClient, updateClient } from "~/services/ClientService";
 import { Client } from "~/types/entity/Client";
+import { PencilIcon } from "@heroicons/vue/24/solid";
 
 // Form
 const schema = yup.object().shape({
@@ -61,15 +58,6 @@ const { submit: save, saving } = useAsyncSubmit({
   messages: { success: "Client modifié avec succès" },
   callbackSuccess: () => router.push(`/modules/client/view/${id}`),
 });
-
-const { deleteFunction, deleting } = useAsyncDelete({
-  delete: () => deleteClient(id),
-  callback: () => router.push("/modules/client"),
-  messages: {
-    error: "Une erreur est arrivé lors de le suppression du client",
-    success: "Client correctement supprimé",
-  },
-});
 </script>
 <template>
   <ui-page-header :title="data?.name ?? '...'" :breadcrumbs="breadcrumbs" />
@@ -123,13 +111,8 @@ const { deleteFunction, deleting } = useAsyncDelete({
     </ui-card>
 
     <div class="flex items-center justify-end col-span-2">
-      <ui-delete-modal
-        @confirm="deleteFunction"
-        title="Suppression d'un client"
-        :loading="deleting"
-        description="Si vous cliquez sur supprimer, ce client sera totalement supprimé et les utilisateurs n'auront plus d'entreprise associer"
-      />
-      <ui-button @click="submit" class="ml-2" :loading="saving">
+      <ui-button @click="submit" :loading="saving">
+        <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
         Modifier
       </ui-button>
     </div>

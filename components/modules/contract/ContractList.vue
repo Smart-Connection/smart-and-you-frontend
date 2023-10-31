@@ -1,11 +1,8 @@
 <script lang="ts" setup>
-import { PencilIcon, EyeIcon } from "@heroicons/vue/24/solid";
+import { PencilIcon, EyeIcon, PlusIcon } from "@heroicons/vue/24/solid";
 import { getStatus, getType, getStatusColor } from "~/helpers/contract";
 import { fetchContracts } from "~/services/ContractService";
 import { User } from "~/types/entity/User";
-
-// Composables
-const user = useState<User>("user");
 
 // Data
 const searchText = ref<string>("");
@@ -58,7 +55,10 @@ const search = (text: string) => {
 <template>
   <ui-page-header title="Prestations">
     <nuxt-link to="/modules/contract/create">
-      <ui-button> Ajouter </ui-button>
+      <ui-button>
+        <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
+        Ajouter
+      </ui-button>
     </nuxt-link>
   </ui-page-header>
   <ui-card title="Liste des Prestations">
@@ -69,6 +69,7 @@ const search = (text: string) => {
       :headers="headers"
       :data="contracts"
       :loading="loadingContracts"
+      @add="$router.push('/modules/contract/create')"
       @page="
         page = $event;
         getContracts();

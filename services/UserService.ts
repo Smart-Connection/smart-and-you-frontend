@@ -80,7 +80,7 @@ export const resendEmail = async (id: string) => {
   const alert = useState("alert");
 
   await useFetchApi({
-    url: `/user/resend-email/${id}`,
+    url: `/users/resend-email/${id}`,
   });
 
   alert.value = {

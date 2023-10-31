@@ -7,7 +7,7 @@ const props = defineProps<{
     to?: string;
   }[];
   loading?: boolean;
-  columnsCount?: 1 | 2 | 3 | 4;
+  columnsCount?: 1 | 2;
 }>();
 const colCount = props.columnsCount ?? 2;
 
@@ -43,7 +43,11 @@ const columnFields = computed(() => {
     </ui-card>
   </div>
   <div v-else class="grid gap-4" :class="`grid-cols-${colCount}`">
-    <ui-card v-for="(fieldsList, index) in columnFields" :key="index">
+    <ui-card
+      v-for="(fieldsList, index) in columnFields"
+      :key="index"
+      :class="columnsCount === 1 ? 'col-span-2' : 'col-span-2 lg:col-span-1'"
+    >
       <table class="w-full divide-gray-300 divide-y">
         <tr v-for="field in fieldsList">
           <td class="text-gray-900 font-medium p-2.5">

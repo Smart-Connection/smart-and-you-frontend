@@ -1,8 +1,12 @@
 <script lang="ts" setup>
-import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/vue/24/solid";
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  PlusIcon,
+} from "@heroicons/vue/24/solid";
 import { Pagination } from "~/types/api/Global";
 
-const emits = defineEmits(["page"]);
+const emits = defineEmits(["page", "add"]);
 const props = defineProps<{
   headers: { label: string; key: string; align?: string }[];
   data: Pagination<any[]> | null | any;
@@ -23,6 +27,10 @@ const nextPage = () => {
   ) {
     emits("page", props.data?.current_page + 1);
   }
+};
+
+const add = () => {
+  emits("add");
 };
 </script>
 <template>
@@ -49,6 +57,30 @@ const nextPage = () => {
               </tr>
             </thead>
             <tbody class="divide-y divide-gray-200">
+              <tr v-if="!loading && data.data.length === 0">
+                <td colSpan="6">
+                  <div class="flex justify-center items-center w-full py-10">
+                    <div class="text-center">
+                      <h3 class="mt-2 text-sm font-semibold text-gray-900">
+                        Aucun résultat
+                      </h3>
+                      <p class="mt-1 text-sm text-gray-500">
+                        Aucun donné pour cette page
+                      </p>
+                      <div class="mt-6">
+                        <ui-button @click="add()">
+                          <PlusIcon
+                            class="-ml-0.5 mr-1.5 h-5 w-5"
+                            aria-hidden="true"
+                          />
+                          Ajouter
+                        </ui-button>
+                      </div>
+                    </div>
+                  </div>
+                </td>
+              </tr>
+
               <tr
                 v-if="loading"
                 :key="`td-loading-${index}`"

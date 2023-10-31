@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PencilIcon, EyeIcon } from "@heroicons/vue/24/solid";
+import { PencilIcon, EyeIcon, PlusIcon } from "@heroicons/vue/24/solid";
 import { fetchClients } from "~/services/ClientService";
 
 // Data
@@ -54,7 +54,10 @@ const search = (text: string) => {
   <div>
     <ui-page-header title="Clients">
       <nuxt-link to="/modules/client/create">
-        <ui-button> Ajouter </ui-button>
+        <ui-button>
+          <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
+          Client
+        </ui-button>
       </nuxt-link>
     </ui-page-header>
     <ui-card title="Liste des Clients">
@@ -65,6 +68,7 @@ const search = (text: string) => {
         :headers="headers"
         :data="data"
         :loading="loading"
+        @add="$router.push('/modules/client/create')"
         @page="
           page = $event;
           execute();

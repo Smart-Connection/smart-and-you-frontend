@@ -37,3 +37,12 @@ export const reset = async (form: { password: string; token: string }) => {
     body: form,
   });
 };
+
+export const logout = async () => {
+  const token = useCookie("token");
+  token.value = null
+  return useFetchApi({
+    url: "/auth/logout",
+    method: "GET",
+  });
+};

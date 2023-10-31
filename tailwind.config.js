@@ -5,6 +5,8 @@ module.exports = {
   ],
   safelist: [
     "bg-green-500",
-    "bg-gray-300"
+    "bg-gray-300",
+    "lg:grid-cols-2",
+    "grid-cols-2"
   ]
 }

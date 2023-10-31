@@ -3,8 +3,9 @@ import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { insertContract } from "~/services/ContractService";
 import { Contract } from "~/types/entity/Contract";
-import { getClients } from "~/services/ClientService";
+import { fetchClients } from "~/services/ClientService";
 import { getTypeList } from "~/helpers/contract";
+import { PlusIcon } from "@heroicons/vue/24/solid";
 
 // Data
 const clientSearchText = ref("");
@@ -27,9 +28,10 @@ const schema = yup.object().shape({
 // Client list
 const { execute: reloadClients, data: clients } = useAsyncData({
   promise: () =>
-    getClients({
+    fetchClients({
       search: clientSearchText.value,
       per_page: 5,
+      page: 1,
     }),
 });
 
@@ -87,6 +89,9 @@ const searchClient = (text: string) => {
   </div>
 
   <div class="flex items-center justify-end mt-4">
-    <ui-button @click="submit" :loading="saving"> Ajouter </ui-button>
+    <ui-button @click="submit" :loading="saving">
+      <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
+      Ajouter
+    </ui-button>
   </div>
 </template>

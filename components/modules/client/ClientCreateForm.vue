@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { PlusIcon } from "@heroicons/vue/24/solid";
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { Client } from "~/types/entity/Client";
@@ -97,6 +98,9 @@ const { submit: save, saving } = useAsyncSubmit({
   </div>
 
   <div class="flex items-center justify-end mt-4">
-    <ui-button @click="submit" :loading="saving"> Ajouter </ui-button>
+    <ui-button @click="submit" :loading="saving">
+      <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
+      Ajouter
+    </ui-button>
   </div>
 </template>

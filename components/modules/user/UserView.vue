@@ -1,9 +1,11 @@
 <script lang="ts" setup>
-import { fetchUser, resendEmail } from "~/services/UserService";
+import { fetchUser, resendEmail, deleteUser } from "~/services/UserService";
 import { getRole, getRoleColor } from "@/helpers/role";
 import { User } from "~/types/entity/User";
+import { PencilIcon } from "@heroicons/vue/24/solid";
 
 // Composable
+const router = useRouter();
 const user = useState<User>("user");
 const route = useRoute();
 const id = route.params.id as string;
@@ -61,6 +63,16 @@ const fields = computed(() => {
 
   return list;
 });
+
+// Delete
+const { deleteFunction, deleting } = useAsyncDelete({
+  delete: () => deleteUser(id),
+  callback: () => router.push("/modules/user"),
+  messages: {
+    error: "Une erreur est arrivé lors de le suppression de l'utilisateur",
+    success: "Utilisateur correctement supprimé",
+  },
+});
 </script>
 <template>
   <ui-page-header
@@ -69,14 +81,28 @@ const fields = computed(() => {
     "
     :breadcrumbs="breadcrumbs"
   >
+    <ui-delete-modal
+      v-if="
+        user.role === 'SUPER_ADMIN' ||
+        (user.role === 'ADMIN' && data?.role != 'SUPER_ADMIN')
+      "
+      @confirm="deleteFunction"
+      :loading="deleting"
+      title="Suppression d'un utilisateur"
+      description="Si vous cliquez sur supprimer, cette utilisateur sera totalement supprimé"
+    />
     <nuxt-link
       v-if="
         user.role === 'SUPER_ADMIN' ||
         (user.role === 'ADMIN' && data?.role != 'SUPER_ADMIN')
       "
+      class="ml-2"
       :to="`/modules/user/edit/${id}`"
     >
-      <ui-button>Modifier</ui-button>
+      <ui-button>
+        <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
+        Modifier
+      </ui-button>
     </nuxt-link>
   </ui-page-header>
   <ui-info

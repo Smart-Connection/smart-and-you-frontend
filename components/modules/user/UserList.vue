@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { PencilIcon, EyeIcon } from "@heroicons/vue/24/solid";
+import { PencilIcon, EyeIcon, PlusIcon } from "@heroicons/vue/24/solid";
 import { fetchUsers } from "~/services/UserService";
 import { User } from "~/types/entity/User";
 import { getRole, getRoleColor } from "@/helpers/role";
@@ -57,7 +57,10 @@ const search = (text: string) => {
   <div>
     <ui-page-header title="Utilisateurs">
       <nuxt-link to="/modules/user/create">
-        <ui-button> Ajouter </ui-button>
+        <ui-button>
+          <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
+          Utilisateur
+        </ui-button>
       </nuxt-link>
     </ui-page-header>
     <ui-card title="Liste des utilisateurs">
@@ -68,6 +71,7 @@ const search = (text: string) => {
         :headers="headers"
         :data="data"
         :loading="loading"
+        @add="$router.push('/modules/user/create')"
         @page="
           page = $event;
           execute();

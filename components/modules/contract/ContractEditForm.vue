@@ -3,8 +3,9 @@ import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { updateContract, fetchContract } from "~/services/ContractService";
 import { Contract } from "~/types/entity/Contract";
-import { getClients } from "~/services/ClientService";
+import { fetchClients } from "~/services/ClientService";
 import { getTypeList, getStatusList } from "~/helpers/contract";
+import { PencilIcon } from "@heroicons/vue/24/solid";
 
 // Form
 const schema = yup.object().shape({
@@ -46,8 +47,9 @@ const breadcrumbs = computed(() => [
 // Client list
 const { execute: reloadClients, data: clients } = useAsyncData({
   promise: () =>
-    getClients({
+    fetchClients({
       search: clientSearchText.value,
+      page: 1,
       per_page: 5,
     }),
 });
@@ -114,6 +116,9 @@ const searchClient = (text: string) => {
   </div>
 
   <div class="flex items-center justify-end mt-4">
-    <ui-button @click="submit" :loading="saving"> Modifier </ui-button>
+    <ui-button @click="submit" :loading="saving">
+      <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
+      Modifier
+    </ui-button>
   </div>
 </template>

@@ -2,9 +2,10 @@
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { getRoleList } from "~/helpers/role";
-import { fetchUser, updateUser, deleteUser } from "~/services/UserService";
-import { User, EditableUser } from "~/types/entity/User";
+import { fetchUser, updateUser } from "~/services/UserService";
+import { User } from "~/types/entity/User";
 import { fetchClients } from "~/services/ClientService";
+import { PencilIcon } from "@heroicons/vue/24/solid";
 
 // Form
 const schema = yup.object().shape({
@@ -85,15 +86,6 @@ const { submit: save, saving } = useAsyncSubmit({
   callbackSuccess: () => router.push("/modules/user"),
 });
 
-const { deleteFunction, deleting } = useAsyncDelete({
-  delete: () => deleteUser(id),
-  callback: () => router.push("/modules/user"),
-  messages: {
-    error: "Une erreur est arrivé lors de le suppression de l'utilisateur",
-    success: "Utilisateur correctement supprimé",
-  },
-});
-
 // Search
 const searchClient = (text: string) => {
   clientSearchText.value = text;
@@ -163,19 +155,8 @@ const searchClient = (text: string) => {
       />
     </ui-card>
     <div class="flex items-center justify-end col-span-2">
-      <ui-delete-modal
-        v-if="!disabled"
-        @confirm="deleteFunction"
-        :loading="deleting"
-        title="Suppression d'un utilisateur"
-        description="Si vous cliquez sur supprimer, cette utilisateur sera totalement supprimé"
-      />
-      <ui-button
-        v-if="!disabled"
-        @click="submit"
-        class="ml-2"
-        :loading="saving"
-      >
+      <ui-button v-if="!disabled" @click="submit" :loading="saving">
+        <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
         Modifier
       </ui-button>
     </div>
