@@ -1,8 +1,8 @@
-name: Deploy
+name: Deploy prod
 on:
   push:
     branches:
-      - develop
+      - main
 
 jobs:
   deploy:
@@ -14,7 +14,7 @@ jobs:
       - name: Publish frontend to Registry
         uses: elgohr/Publish-Docker-Github-Action@v5
         env:
-          NUXT_PUBLIC_API_URL: https://preprod.api.smartandyou.com/api
+          NUXT_PUBLIC_API_URL: https://prod.api.smartandyou.com/api
           NUXT_PUBLIC_MAX_AUTH_COOKIE_AGE: 604800
         with:
           name: smart-connection/smart-fit-packages-frontend
