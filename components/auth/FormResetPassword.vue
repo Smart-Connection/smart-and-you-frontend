@@ -3,6 +3,11 @@ import { reset } from "@/services/AuthService";
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 
+// Composables
+const alert = useState("alert");
+const route = useRoute();
+const router = useRouter();
+
 // Form
 const schema = yup.object({
   password: yup.string().required("Le mot de passe est requis"),
@@ -11,27 +16,17 @@ const schema = yup.object({
     .oneOf([yup.ref("password")], "Les mots de passe doivent correspondre")
     .required("Le mot de passe est requis"),
 });
-const { handleSubmit } = useForm<{
+const { handleSubmit, values } = useForm<{
   password: string;
   confirm: string;
 }>({
   validationSchema: schema,
 });
 
-// Composables
-const alert = useState("alert");
-const route = useRoute();
-
 // Data
-const loading = ref<boolean>(false);
-
-const submit = handleSubmit(async (values) => {
-  loading.value = true;
+const submit = handleSubmit(() => {
   if (route.query.token) {
-    await reset({
-      password: values.password,
-      token: route.query.token as string,
-    });
+    return save();
   } else {
     alert.value = {
       type: "error",
@@ -39,8 +34,17 @@ const submit = handleSubmit(async (values) => {
       status: true,
     };
   }
-
-  loading.value = false;
+});
+const { submit: save, saving } = useAsyncSubmit({
+  submitApiCall: () =>
+    reset({
+      password: values.password,
+      token: route.query.token as string,
+    }),
+  callbackSuccess: () => {
+    router.push("/auth/login");
+  },
+  messages: { success: "Message correctement modifié" },
 });
 </script>
 <template>
@@ -68,7 +72,7 @@ const submit = handleSubmit(async (values) => {
         <ui-button
           color="primary"
           type="submit"
-          :loading="loading"
+          :loading="saving"
           block
           class="mt-10"
         >

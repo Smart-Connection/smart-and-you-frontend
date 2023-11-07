@@ -34,7 +34,7 @@
         <ui-button
           color="primary"
           type="submit"
-          :loading="loading"
+          :loading="saving"
           block
           class="mt-10"
         >
@@ -48,6 +48,15 @@
 import { login } from "@/services/AuthService";
 import * as yup from "yup";
 import { useForm } from "vee-validate";
+import { LoginResponse } from "~/types/api/Auth";
+
+// Composables
+const router = useRouter();
+const config = useRuntimeConfig();
+const token = useCookie("token", {
+  maxAge: parseInt(config.public.maxAuthCookieAge),
+});
+const user = useState("user");
 
 // Form
 const schema = yup.object({
@@ -57,16 +66,22 @@ const schema = yup.object({
     .required("L'email est requis"),
   password: yup.string().required("Le mot de passe est requis"),
 });
-const { handleSubmit } = useForm<{ email: string; password: string }>({
+const { handleSubmit, values } = useForm<{ email: string; password: string }>({
   validationSchema: schema,
 });
 
 // Data
-const loading = ref<boolean>(false);
-
-const submit = handleSubmit(async (values) => {
-  loading.value = true;
-  await login(values);
-  loading.value = false;
+const submit = handleSubmit(() => {
+  return save();
+});
+const { submit: save, saving } = useAsyncSubmit({
+  submitApiCall: () => login(values),
+  callbackSuccess: (data: LoginResponse) => {
+    token.value = data.authorization.token;
+    user.value = data.user;
+    const { home } = useRouteList();
+    router.push({ name: home?.name });
+  },
+  noMessage: true,
 });
 </script>

@@ -27,7 +27,6 @@ const open = ref(false);
 
 onMounted(() => {
   emits("change", "");
-  console.log(props.default);
   if (props.default) {
     search.value = props.default.name;
   }
@@ -73,6 +72,12 @@ const searchDebounced = useDebounceFn(() => {
         class="text-sm hover:bg-blue-600 hover:text-white p-3 rounded cursor-pointer"
       >
         {{ item[itemLabel] }}
+      </div>
+      <div
+        v-if="items.data.length === 0"
+        class="text-sm p-3 rounded cursor-pointer"
+      >
+        Aucun donnée
       </div>
     </div>
   </div>

@@ -2,14 +2,10 @@
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 import { getRoleList } from "~/helpers/role";
-import {
-  resendEmail,
-  getUser,
-  editUser,
-  deleteUser,
-} from "~/services/UserService";
-import { User, EditableUser } from "~/types/entity/User";
-import { listClient } from "~/services/ClientService";
+import { fetchUser, updateUser } from "~/services/UserService";
+import { User } from "~/types/entity/User";
+import { fetchClients } from "~/services/ClientService";
+import { PencilIcon } from "@heroicons/vue/24/solid";
 
 // Form
 const schema = yup.object().shape({
@@ -20,32 +16,40 @@ const schema = yup.object().shape({
   role: yup.string().required("Le rôle est requis"),
   firstname: yup.string().required("Le prénom est requis"),
   lastname: yup.string().required("Le nom est requis"),
-  client_id: yup.string().required("Le client est requis"),
+  client_id: yup.string(),
 });
 
 // Composable
 const router = useRouter();
 const route = useRoute();
-const { data: clients, execute: searchClient } = listClient();
-const { data: user, loading: userLoading, execute } = getUser();
-const { handleSubmit, resetForm } = useForm<EditableUser>({
+const id = route.params.id as string;
+const { handleSubmit, resetForm, values } = useForm<User>({
   validationSchema: schema,
 });
 
 // Data
+const clientSearchText = ref("");
 const authUser = useState<User>("user");
-const loading = ref<boolean>(false);
-const pageLoading = ref<boolean>(true);
 
-// Init
-if (route.params.id) {
-  await execute(route.params.id as string);
-  if (user.value) {
-    resetForm({ values: user.value });
-  } else {
-    router.push("/modules/user");
-  }
-}
+// User data
+const { loading, data } = useAsyncData({
+  promise: () => fetchUser({ id, params: { populate: "client" } }),
+  callback: () => {
+    if (data) {
+      resetForm({ values: data.value as User });
+    }
+  },
+});
+
+// Client list
+const { execute: reloadClients, data: clients } = useAsyncData({
+  promise: () =>
+    fetchClients({
+      search: clientSearchText.value,
+      page: 1,
+      per_page: 5,
+    }),
+});
 
 // Breadcrumbs
 const breadcrumbs = computed(() => [
@@ -54,12 +58,10 @@ const breadcrumbs = computed(() => [
     path: "/modules/user",
   },
   {
-    label: user.value?.firstname
-      ? `${user.value.firstname} ${user.value.lastname}`
-      : "...",
-    path: user.value?.id
-      ? `/modules/user/${user.value.id}`
-      : "/modules/user/create",
+    label: data.value?.firstname
+      ? `${data.value?.firstname} ${data.value?.lastname}`
+      : "Utilisateur",
+    path: data.value?.id ? `/modules/user/edit/${data.value.id}` : "#",
   },
 ]);
 
@@ -68,126 +70,93 @@ const disabled = computed(() => {
   if (authUser.value.role === "SUPER_ADMIN") return false;
   else if (
     authUser.value.role === "ADMIN" &&
-    user.value?.role !== "SUPER_ADMIN"
+    data.value?.role !== "SUPER_ADMIN"
   )
     return false;
   return true;
 });
 
-const clientId = (data: EditableUser) => {
-  if (authUser.value.role === "SUPER_ADMIN") {
-    return data.client_id;
-  } else {
-    return authUser.value.client_id;
-  }
-};
-
-// Functions
-const submit = handleSubmit(async (values) => {
-  loading.value = true;
-  if (user.value) {
-    const { error } = await editUser(user.value.id, {
-      ...values,
-      client_id: clientId(values),
-    });
-    if (!error) router.push("/modules/user");
-  }
-  loading.value = false;
+// Submit
+const submit = handleSubmit(() => {
+  return save();
+});
+const { submit: save, saving } = useAsyncSubmit({
+  submitApiCall: () => updateUser(id, values),
+  messages: { success: "Utilisateur correctement modifié" },
+  callbackSuccess: () => router.push("/modules/user"),
 });
 
-const deleteModal = async () => {
-  if (user.value) {
-    const { error } = await deleteUser(user.value.id);
-    if (!error) router.push("/modules/user");
-  }
+// Search
+const searchClient = (text: string) => {
+  clientSearchText.value = text;
+  reloadClients();
 };
 </script>
 <template>
-  <ui-page-header title="Utilisateurs" :breadcrumbs="breadcrumbs" />
-  <p v-if="!pageLoading">Chargement</p>
-  <div v-if="user" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-    <ui-info
-      v-if="user.account_creation_token"
-      class="col-span-2"
-      type="alert"
-      title="Attention"
-      description="Cet utilisateur n'a pas finalisé sont inscription. "
-    >
-      <ui-button color="secondary" @click="resendEmail(user.id)">
-        Renvoyer l'invitation
-      </ui-button>
-    </ui-info>
+  <ui-page-header
+    :title="`${
+      data?.firstname ? `${data?.firstname} ${data?.lastname}` : 'Utilisateur'
+    }`"
+    :breadcrumbs="breadcrumbs"
+  />
+  <ui-page-loader v-if="loading" />
+  <div v-if="data && !loading" class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <ui-card
       title="Informations personnel"
-      v-if="user.firstname"
+      v-if="data.firstname"
       class="col-span-2 md:col-span-1"
     >
-      <template #content>
-        <ui-form-input-text
-          name="firstname"
-          type="text"
-          placeholder="Jean"
-          label="Prénom"
-          required
-          :disabled="disabled"
-        />
-        <ui-form-input-text
-          name="lastname"
-          type="text"
-          placeholder="Dupont"
-          label="Nom"
-          required
-          :disabled="disabled"
-        />
-      </template>
+      <ui-form-input-text
+        name="firstname"
+        type="text"
+        placeholder="Jean"
+        label="Prénom"
+        required
+        :disabled="disabled"
+      />
+      <ui-form-input-text
+        name="lastname"
+        type="text"
+        placeholder="Dupont"
+        label="Nom"
+        required
+        :disabled="disabled"
+      />
     </ui-card>
     <ui-card
       title="Informations d'authentification"
-      :class="!user.firstname ? ' md:col-span-2' : 'col-span-2 md:col-span-1'"
+      :class="!data.firstname ? ' md:col-span-2' : 'col-span-2 md:col-span-1'"
     >
-      <template #content>
-        <ui-form-input-text
-          name="email"
-          type="text"
-          label="Email"
-          required
-          placeholder="jean.dupont@mail.com"
-          :disabled="disabled"
-        />
-        <ui-form-input-select
-          name="role"
-          label="Rôle"
-          :items="getRoleList(disabled)"
-          required
-          :disabled="disabled"
-        />
-        <ui-form-input-comboboxe
-          v-if="authUser.role === 'SUPER_ADMIN'"
-          name="client_id"
-          item-key="id"
-          item-label="name"
-          label="Client"
-          required
-          :items="clients"
-          :default="user.client"
-          @change="searchClient({ search: $event, per_page: 5 })"
-          placeholder="Chercher un client"
-        />
-      </template>
+      <ui-form-input-text
+        name="email"
+        type="text"
+        label="Email"
+        required
+        placeholder="jean.dupont@mail.com"
+        :disabled="disabled"
+      />
+      <ui-form-input-select
+        name="role"
+        label="Rôle"
+        :items="getRoleList(disabled)"
+        required
+        :disabled="disabled"
+      />
+      <ui-form-input-comboboxe
+        v-if="authUser.role === 'SUPER_ADMIN'"
+        name="client_id"
+        item-key="id"
+        item-label="name"
+        label="Client"
+        :items="clients"
+        :default="data.client"
+        @change="searchClient"
+        placeholder="Chercher un client"
+      />
     </ui-card>
     <div class="flex items-center justify-end col-span-2">
-      <ui-delete-modal
-        v-if="!disabled"
-        @confirm="deleteModal"
-        title="Suppression d'un utilisateur"
-        description="Si vous cliquez sur supprimer, cette utilisateur sera totalement supprimé"
-      />
-      <ui-button
-        v-if="!disabled"
-        @click="submit"
-        class="ml-2"
-        :loading="loading"
-      >
+      <ui-button v-if="!disabled" @click="submit" :loading="saving">
+        <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
         Modifier
       </ui-button>
     </div>

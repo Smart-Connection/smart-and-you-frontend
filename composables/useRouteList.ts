@@ -1,6 +1,7 @@
 import { SUPER_ADMIN_ROUTES } from "@/routes/superAdmin";
 import { ADMIN_ROUTES } from "@/routes/admin";
 import { USER_ROUTES } from "@/routes/user";
+import { CONSULTANT_ROUTES } from "@/routes/consultant";
 import type { RouteLink } from "@/types/router/Routes";
 import { User } from "~/types/entity/User";
 
@@ -16,6 +17,8 @@ export const useRouteList = () => {
     links = ADMIN_ROUTES;
   } else if (user.value?.role === "USER") {
     links = USER_ROUTES;
+  } else if (user.value?.role === "CONSULTANT") {
+    links = CONSULTANT_ROUTES;
   }
 
   // Get home

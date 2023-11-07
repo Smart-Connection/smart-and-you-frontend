@@ -1,0 +1,26 @@
+name: Deploy prod
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Inject slug/short variables
+        uses: rlespinasse/github-slug-action@v4
+      - name: Publish frontend to Registry
+        uses: elgohr/Publish-Docker-Github-Action@v5
+        env:
+          NUXT_PUBLIC_API_URL: https://prod.api.smartandyou.com/api
+          NUXT_PUBLIC_MAX_AUTH_COOKIE_AGE: 604800
+        with:
+          name: smart-connection/smart-fit-packages-frontend
+          username: nologin
+          password: ${{ secrets.SCW_SECRET }}
+          registry: rg.fr-par.scw.cloud
+          buildoptions: "--target nginx"
+          buildargs: NUXT_PUBLIC_API_URL,NUXT_PUBLIC_MAX_AUTH_COOKIE_AGE
+          tags: ${{ vars.GITHUB_REF_SLUG }}

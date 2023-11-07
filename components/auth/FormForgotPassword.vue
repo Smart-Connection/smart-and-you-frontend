@@ -3,6 +3,10 @@ import { forgot } from "@/services/AuthService";
 import * as yup from "yup";
 import { useForm } from "vee-validate";
 
+// Composables
+const alert = useState("alert");
+const router = useRouter();
+
 // Form
 const schema = yup.object({
   email: yup
@@ -10,17 +14,25 @@ const schema = yup.object({
     .email("L'email n'est pas valide")
     .required("L'email est requis"),
 });
-const { handleSubmit } = useForm<{ email: string; password: string }>({
+const { handleSubmit, values } = useForm<{ email: string }>({
   validationSchema: schema,
 });
 
 // Data
-const loading = ref<boolean>(false);
-
-const submit = handleSubmit(async (values) => {
-  loading.value = true;
-  await forgot(values);
-  loading.value = false;
+const submit = handleSubmit(() => {
+  return save();
+});
+const { submit: save, saving } = useAsyncSubmit({
+  submitApiCall: () => forgot(values),
+  callbackSuccess: () => {
+    alert.value = {
+      type: "success",
+      message: "Un email de vérification à été envoyé",
+      status: true,
+    };
+    router.push("/auth/login");
+  },
+  noMessage: true,
 });
 </script>
 
@@ -43,7 +55,7 @@ const submit = handleSubmit(async (values) => {
         <ui-button
           color="primary"
           type="submit"
-          :loading="loading"
+          :loading="saving"
           block
           class="mt-10"
         >

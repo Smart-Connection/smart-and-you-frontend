@@ -1,8 +1,9 @@
 <script lang="ts" setup>
 import * as yup from "yup";
 import { useForm } from "vee-validate";
-import { getClient, editClient, deleteClient } from "~/services/ClientService";
-import { EditableClient } from "~/types/entity/Client";
+import { fetchClient, updateClient } from "~/services/ClientService";
+import { Client } from "~/types/entity/Client";
+import { PencilIcon } from "@heroicons/vue/24/solid";
 
 // Form
 const schema = yup.object().shape({
@@ -18,27 +19,23 @@ const schema = yup.object().shape({
   country: yup.string().required("le champs ville est requis"),
 });
 
-// Composable
+// Composables
 const router = useRouter();
 const route = useRoute();
-const { data: client, loading: userLoading, execute } = getClient();
-const { handleSubmit, resetForm } = useForm<EditableClient>({
+const id: string = route.params.id as string;
+const { handleSubmit, resetForm, values } = useForm<Client>({
   validationSchema: schema,
 });
 
 // Data
-const loading = ref<boolean>(false);
-const pageLoading = ref<boolean>(true);
-
-// Init
-if (route.params.id) {
-  await execute(route.params.id as string);
-  if (client.value) {
-    resetForm({ values: client.value });
-  } else {
-    router.push("/modules/client");
-  }
-}
+const { loading, data } = useAsyncData({
+  promise: () => fetchClient({ id }),
+  callback: () => {
+    if (data) {
+      resetForm({ values: data.value as Client });
+    }
+  },
+});
 
 // Breadcrumbs
 const breadcrumbs = computed(() => [
@@ -47,92 +44,75 @@ const breadcrumbs = computed(() => [
     path: "/modules/client",
   },
   {
-    label: client.value?.name ?? "...",
-    path: client.value?.id
-      ? `/modules/client/${client.value.id}`
-      : "/modules/client/create",
+    label: data.value?.name ?? "...",
+    path: data.value?.id ? `/modules/client/edit/${data.value.id}` : "#",
   },
 ]);
 
-// Functions
+// Submit
 const submit = handleSubmit(async (values) => {
-  loading.value = true;
-  if (client.value) {
-    const { error } = await editClient(client.value.id, values);
-    if (!error) router.push("/modules/client");
-  }
-  loading.value = false;
+  return save();
 });
-
-const deleteModal = async () => {
-  if (client.value) {
-    const { error } = await deleteClient(client.value.id);
-    if (!error) router.push("/modules/client");
-  }
-};
+const { submit: save, saving } = useAsyncSubmit({
+  submitApiCall: () => updateClient(id, values),
+  messages: { success: "Client modifié avec succès" },
+  callbackSuccess: () => router.push(`/modules/client/view/${id}`),
+});
 </script>
 <template>
-  <ui-page-header title="Création d'un client" :breadcrumbs="breadcrumbs" />
-  <p v-if="!pageLoading">Charge</p>
-  <div v-if="client" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+  <ui-page-header :title="data?.name ?? '...'" :breadcrumbs="breadcrumbs" />
+  <ui-page-loader v-if="loading" />
+  <div v-if="data && !loading" class="grid grid-cols-1 md:grid-cols-2 gap-4">
     <ui-card title="Informations" class="col-span-2 md:col-span-1">
-      <template #content>
-        <ui-form-input-text
-          name="name"
-          type="text"
-          label="Nom"
-          required
-          placeholder="Mon entreprise"
-        />
-        <ui-form-input-text
-          name="siret"
-          type="text"
-          label="Siret"
-          required
-          placeholder="12345678901234"
-        />
-      </template>
+      <ui-form-input-text
+        name="name"
+        type="text"
+        label="Nom"
+        required
+        placeholder="Mon entreprise"
+      />
+      <ui-form-input-text
+        name="siret"
+        type="text"
+        label="Siret"
+        required
+        placeholder="12345678901234"
+      />
     </ui-card>
     <ui-card title="Adresse" class="col-span-2 md:col-span-1">
-      <template #content>
-        <ui-form-input-text
-          name="address"
-          type="text"
-          label="Adresse"
-          required
-          placeholder="1 avenue du louvre"
-        />
-        <ui-form-input-text
-          name="zipcode"
-          type="text"
-          label="Code postal"
-          required
-          placeholder="75001"
-        />
-        <ui-form-input-text
-          name="city"
-          type="text"
-          label="Ville"
-          required
-          placeholder="Paris"
-        />
-        <ui-form-input-text
-          name="country"
-          type="text"
-          label="Pays"
-          required
-          placeholder="France"
-        />
-      </template>
+      <ui-form-input-text
+        name="address"
+        type="text"
+        label="Adresse"
+        required
+        placeholder="1 avenue du louvre"
+      />
+      <ui-form-input-text
+        name="zipcode"
+        type="text"
+        label="Code postal"
+        required
+        placeholder="75001"
+      />
+      <ui-form-input-text
+        name="city"
+        type="text"
+        label="Ville"
+        required
+        placeholder="Paris"
+      />
+      <ui-form-input-text
+        name="country"
+        type="text"
+        label="Pays"
+        required
+        placeholder="France"
+      />
     </ui-card>
 
     <div class="flex items-center justify-end col-span-2">
-      <ui-delete-modal
-        @confirm="deleteModal"
-        title="Suppression d'un client"
-        description="Si vous cliquez sur supprimer, ce client sera totalement supprimé et les utilisateurs n'auront plus d'entreprise associer"
-      />
-      <ui-button @click="submit" class="ml-2" :loading="loading">
+      <ui-button @click="submit" :loading="saving">
+        <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
         Modifier
       </ui-button>
     </div>
