@@ -17,7 +17,7 @@ jobs:
           NUXT_PUBLIC_API_URL: https://preprod.api.smartandyou.com/api
           NUXT_PUBLIC_MAX_AUTH_COOKIE_AGE: 604800
         with:
-          name: smart-connection/smart-fit-frontend/frontend
+          name: smart-connection/smart-fit-frontend/nginx
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
           registry: ghcr.io
