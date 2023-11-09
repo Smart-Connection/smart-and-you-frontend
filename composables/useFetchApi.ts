@@ -35,6 +35,6 @@ export const useFetchApi = async <T>(options: {
 
     return data;
   } catch (e: any) {
-    throw e;
+    throw e.response.data.message;
   }
 };

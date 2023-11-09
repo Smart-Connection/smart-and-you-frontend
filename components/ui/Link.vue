@@ -1,11 +1,10 @@
-<script lang="ts" setup>
+<script setup lang="ts">
 import type { RouteParamsRaw } from "#vue-router";
-import { FunctionalComponent } from "nuxt/dist/app/compat/capi";
 
-defineProps<{
+// Props
+const props = defineProps<{
   routeName: string;
   routeParams?: RouteParamsRaw;
-  icon: FunctionalComponent;
 }>();
 
 // Composable
@@ -14,9 +13,12 @@ const { asAccess } = useRouteList();
 <template>
   <nuxt-link
     v-if="asAccess(routeName)"
-    class="w-8 h-8 flex items-center justify-center rounded-full hover:bg-gray-100 text-blue-800"
     :to="{ name: routeName, params: routeParams }"
+    class="text-blue-800"
   >
-    <component :is="icon" class="w-4 h-4" />
+    <slot />
   </nuxt-link>
+  <div v-else>
+    <slot />
+  </div>
 </template>

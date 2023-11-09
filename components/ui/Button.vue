@@ -1,23 +1,6 @@
-<template>
-  <button
-    :type="type ? type : 'button'"
-    class="relative select-none"
-    :class="[getColor, getSize, block ? 'w-full' : '']"
-    @click="emits('click')"
-  >
-    <div
-      v-if="loading"
-      class="absolute w-full h-full flex justify-center items-center top-0 left-0 rounded-md"
-      :class="[getColor]"
-    >
-      <ui-loader class="w-5" />
-    </div>
-
-    {{ text }}
-    <slot />
-  </button>
-</template>
 <script lang="ts" setup>
+import type { RouteParamsRaw } from "#vue-router";
+
 // Props & emits
 const props = defineProps<{
   text?: string;
@@ -26,8 +9,13 @@ const props = defineProps<{
   size?: "small" | "big";
   block?: boolean;
   loading?: boolean;
+  routeName?: string;
+  routeParams?: RouteParamsRaw;
 }>();
 const emits = defineEmits(["click"]);
+
+// Composable
+const { asAccess } = useRouteList();
 
 // Computed
 const getColor = computed(() => {
@@ -50,3 +38,44 @@ const getSize = computed(() => {
   }
 });
 </script>
+<template>
+  <nuxt-link
+    v-if="routeName && asAccess(routeName)"
+    :to="{ name: routeName, params: routeParams }"
+  >
+    <button
+      :type="type ? type : 'button'"
+      class="relative select-none"
+      :class="[getColor, getSize, block ? 'w-full' : '']"
+    >
+      <div
+        v-if="loading"
+        class="absolute w-full h-full flex justify-center items-center top-0 left-0 rounded-md"
+        :class="[getColor]"
+      >
+        <ui-loader class="w-5" />
+      </div>
+
+      {{ text }}
+      <slot />
+    </button>
+  </nuxt-link>
+  <button
+    v-if="!routeName"
+    :type="type ? type : 'button'"
+    class="relative select-none"
+    :class="[getColor, getSize, block ? 'w-full' : '']"
+    @click="emits('click')"
+  >
+    <div
+      v-if="loading"
+      class="absolute w-full h-full flex justify-center items-center top-0 left-0 rounded-md"
+      :class="[getColor]"
+    >
+      <ui-loader class="w-5" />
+    </div>
+
+    {{ text }}
+    <slot />
+  </button>
+</template>

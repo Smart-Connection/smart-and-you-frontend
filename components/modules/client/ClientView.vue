@@ -57,12 +57,10 @@ const { deleteFunction, deleting } = useAsyncDelete({
       :loading="deleting"
       description="Si vous cliquez sur supprimer, ce client sera totalement supprimé et les utilisateurs n'auront plus d'entreprise associer"
     />
-    <nuxt-link :to="`/modules/client/edit/${id}`" class="ml-2">
-      <ui-button>
-        <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
-        Modifier
-      </ui-button>
-    </nuxt-link>
+    <ui-button route-name="modules-client-edit-id" :route-params="{ id: id }">
+      <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
+      Modifier
+    </ui-button>
   </ui-page-header>
   <ui-table-info :loading="loading" :fields="fields" />
 </template>

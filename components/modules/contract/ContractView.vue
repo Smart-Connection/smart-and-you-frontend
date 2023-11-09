@@ -13,7 +13,7 @@ const id = route.params.id as string;
 
 // Data
 const { loading, data } = useAsyncData({
-  promise: () => fetchContract({ id, params: { populate: "client" } }),
+  promise: () => fetchContract({ id, params: { populate: "client,sessions" } }),
 });
 
 // Breadcrumbs
@@ -66,17 +66,13 @@ const { deleteFunction, deleting } = useAsyncDelete({
       :loading="deleting"
       description="Si vous cliquez sur supprimer, cette prestation sera totalement supprimé et les sessions seront supprimé avec"
     />
-    <nuxt-link
-      v-if="user.role === 'SUPER_ADMIN'"
-      class="ml-2"
-      :to="`/modules/contract/edit/${id}`"
-    >
-      <ui-button>
-        <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
-        Modifier
-      </ui-button>
-    </nuxt-link>
+    <ui-button route-name="modules-contract-edit-id" :route-params="{ id: id }">
+      <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
+      Modifier
+    </ui-button>
   </ui-page-header>
+
+  <!-- Résumé -->
   <ui-table-info :loading="loading" :fields="fields">
     <template #item-status="{ item }">
       <ui-label :color="getStatusColor(item.value)">
@@ -84,4 +80,11 @@ const { deleteFunction, deleting } = useAsyncDelete({
       </ui-label>
     </template>
   </ui-table-info>
+
+  <!-- Sessions -->
+  <modules-contract-components-sessions-list
+    class="mt-4"
+    :loading="loading"
+    :sessions="data?.sessions"
+  />
 </template>

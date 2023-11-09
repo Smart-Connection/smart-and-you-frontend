@@ -56,12 +56,10 @@ const search = (text: string) => {
 <template>
   <div>
     <ui-page-header title="Utilisateurs">
-      <nuxt-link to="/modules/user/create">
-        <ui-button>
-          <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
-          Utilisateur
-        </ui-button>
-      </nuxt-link>
+      <ui-button route-name="modules-user-create">
+        <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
+        Utilisateur
+      </ui-button>
     </ui-page-header>
     <ui-card title="Liste des utilisateurs">
       <template #headerActions>
@@ -93,18 +91,16 @@ const search = (text: string) => {
           </ui-label>
         </template>
         <template #item-action="{ item }">
-          <ui-action-button :to="`/modules/user/view/${item.id}`">
-            <EyeIcon class="w-4 h-4" />
-          </ui-action-button>
           <ui-action-button
-            v-if="
-              user.role === 'SUPER_ADMIN' ||
-              (user.role === 'ADMIN' && item.role != 'SUPER_ADMIN')
-            "
-            :to="`/modules/user/edit/${item.id}`"
-          >
-            <PencilIcon class="w-4 h-4" />
-          </ui-action-button>
+            route-name="modules-user-view-id"
+            :route-params="{ id: item.id }"
+            :icon="EyeIcon"
+          />
+          <ui-action-button
+            route-name="modules-user-edit-id"
+            :route-params="{ id: item.id }"
+            :icon="PencilIcon"
+          />
         </template>
       </ui-table>
     </ui-card>

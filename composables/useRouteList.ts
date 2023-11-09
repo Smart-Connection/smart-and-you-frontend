@@ -40,9 +40,26 @@ export const useRouteList = () => {
     }
   });
 
+  const asAccess = (routeName: string) => {
+    const routes: string[] = [];
+
+    links.map((route) => {
+      if (route.routes) {
+        routes.push(...route.routes);
+      } else {
+        route.child?.map((childRoutes) => {
+          routes.push(...childRoutes.routes);
+        });
+      }
+    });
+    
+    return routes.includes(routeName);
+  };
+
   return {
     links,
     home,
     routes,
+    asAccess
   };
 };

@@ -53,12 +53,10 @@ const search = (text: string) => {
 <template>
   <div>
     <ui-page-header title="Clients">
-      <nuxt-link to="/modules/client/create">
-        <ui-button>
-          <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
-          Client
-        </ui-button>
-      </nuxt-link>
+      <ui-button route-name="modules-client-create">
+        <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
+        Client
+      </ui-button>
     </ui-page-header>
     <ui-card title="Liste des Clients">
       <template #headerActions>
@@ -78,12 +76,16 @@ const search = (text: string) => {
           <ui-label color="blue">{{ item.users.length }}</ui-label>
         </template>
         <template #item-action="{ item }">
-          <ui-action-button :to="`/modules/client/view/${item.id}`">
-            <EyeIcon class="w-4 h-4" />
-          </ui-action-button>
-          <ui-action-button :to="`/modules/client/edit/${item.id}`">
-            <PencilIcon class="w-4 h-4" />
-          </ui-action-button>
+          <ui-action-button
+            route-name="modules-client-view-id"
+            :route-params="{ id: item.id }"
+            :icon="EyeIcon"
+          />
+          <ui-action-button
+            route-name="modules-client-edit-id"
+            :route-params="{ id: item.id }"
+            :icon="PencilIcon"
+          />
         </template>
       </ui-table>
     </ui-card>
