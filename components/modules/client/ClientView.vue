@@ -52,6 +52,7 @@ const { deleteFunction, deleting } = useAsyncDelete({
 <template>
   <ui-page-header :title="data?.name ?? 'Client'" :breadcrumbs="breadcrumbs">
     <ui-delete-modal
+      rule-name="modules-client-delete"
       @confirm="deleteFunction"
       title="Suppression d'un client"
       :loading="deleting"

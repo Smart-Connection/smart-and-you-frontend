@@ -64,6 +64,7 @@ const { deleteFunction, deleting } = useAsyncDelete({
       @confirm="deleteFunction"
       title="Suppression d'une prestation"
       :loading="deleting"
+      rule-name="modules-session-delete"
       description="Si vous cliquez sur supprimer, cette prestation sera totalement supprimé et les sessions seront supprimé avec"
     />
     <ui-button route-name="modules-contract-edit-id" :route-params="{ id: id }">

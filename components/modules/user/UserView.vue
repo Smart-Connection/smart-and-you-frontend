@@ -82,6 +82,7 @@ const { deleteFunction, deleting } = useAsyncDelete({
     :breadcrumbs="breadcrumbs"
   >
     <ui-delete-modal
+      rule-name="modules-user-delete"
       v-if="
         user.role === 'SUPER_ADMIN' ||
         (user.role === 'ADMIN' && data?.role != 'SUPER_ADMIN')

@@ -24,6 +24,7 @@ export const ADMIN_ROUTES: RouteLink[] = [
           "modules-user-create",
           "modules-user-edit-id",
           "modules-user-view-id",
+          "modules-user-delete"
         ],
       },
     ],

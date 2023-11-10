@@ -111,8 +111,7 @@ const add = () => {
                       : ''
                   "
                 >
-                  <slot :name="`item-${header.key}`" :item="element"
-                    >^
+                  <slot :name="`item-${header.key}`" :item="element">
                     {{ element[header.key] ?? "--" }}
                   </slot>
                 </td>
