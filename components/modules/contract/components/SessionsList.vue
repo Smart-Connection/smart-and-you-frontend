@@ -78,12 +78,12 @@ const headers = computed(() => {
       <template #item-action="{ item }">
         <ui-action-button
           route-name="modules-session-view-id"
-          :route-params="{ id: item.consultant.id }"
+          :route-params="{ id: item.id }"
           :icon="EyeIcon"
         />
         <ui-action-button
           route-name="modules-session-edit-id"
-          :route-params="{ id: item.consultant.id }"
+          :route-params="{ id: item.id }"
           :icon="PencilIcon"
         />
       </template>

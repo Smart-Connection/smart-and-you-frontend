@@ -33,7 +33,22 @@ const breadcrumbs = computed(() => [
 
 // Form
 const schema = yup.object().shape({
+  format: yup.string().required("Le format est requis"),
   user_id: yup.string().required("Le consultant est requis"),
+  contact_email: yup.string().email("Email incorrect"),
+  date: yup.string().required("La date est requise"),
+  address: yup.string().when("format", {
+    is: (format: string) => format === "FACE_TO_FACE",
+    then: () => yup.string().required("L'adresse est requise"),
+  }),
+  city: yup.string().when("format", {
+    is: (format: string) => format === "FACE_TO_FACE",
+    then: () => yup.string().required("La ville est requise"),
+  }),
+  zipcode: yup.string().when("format", {
+    is: (format: string) => format === "FACE_TO_FACE",
+    then: () => yup.string().required("Le code postal est requis"),
+  }),
 });
 const { handleSubmit, values } = useForm<Session>({
   validationSchema: schema,
