@@ -45,7 +45,7 @@ const add = () => {
         </td>
       </tr>
       <tr v-if="!loading && items.length === 0">
-        <td colSpan="6">
+        <td :colSpan="headers.length">
           <div class="flex justify-center items-center w-full py-10">
             <div class="text-center">
               <h3 class="mt-2 text-sm font-semibold text-gray-900">

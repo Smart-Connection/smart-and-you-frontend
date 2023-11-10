@@ -58,7 +58,7 @@ const add = () => {
             </thead>
             <tbody class="divide-y divide-gray-200">
               <tr v-if="!loading && data.data.length === 0">
-                <td colSpan="6">
+                <td :colSpan="headers.length">
                   <div class="flex justify-center items-center w-full py-10">
                     <div class="text-center">
                       <h3 class="mt-2 text-sm font-semibold text-gray-900">
@@ -111,7 +111,8 @@ const add = () => {
                       : ''
                   "
                 >
-                  <slot :name="`item-${header.key}`" :item="element">
+                  <slot :name="`item-${header.key}`" :item="element"
+                    >^
                     {{ element[header.key] ?? "--" }}
                   </slot>
                 </td>
