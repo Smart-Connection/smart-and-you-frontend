@@ -55,10 +55,7 @@ const add = () => {
                 Aucun donné pour cette page
               </p>
               <div class="mt-6">
-                <ui-button @click="add()">
-                  <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
-                  Ajouter
-                </ui-button>
+                <slot name="no-data" />
               </div>
             </div>
           </div>

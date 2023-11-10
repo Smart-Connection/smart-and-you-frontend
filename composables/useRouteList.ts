@@ -56,10 +56,16 @@ export const useRouteList = () => {
     return routes.includes(routeName);
   };
 
+  const useParams = <P>() => {
+    const route = useRoute()
+    return route.params as P
+  }
+
   return {
     links,
     home,
     routes,
-    asAccess
+    asAccess,
+    useParams
   };
 };

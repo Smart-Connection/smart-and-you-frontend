@@ -6,6 +6,7 @@ import { fetchUser, updateUser } from "~/services/UserService";
 import { User } from "~/types/entity/User";
 import { fetchClients } from "~/services/ClientService";
 import { PencilIcon } from "@heroicons/vue/24/solid";
+import { Client } from "~/types/entity/Client";
 
 // Form
 const schema = yup.object().shape({
@@ -91,6 +92,20 @@ const searchClient = (text: string) => {
   clientSearchText.value = text;
   reloadClients();
 };
+
+// Computed
+const formatClients = computed(() => {
+  if (clients.value) {
+    return clients.value.data.map((client: Client) => {
+      return {
+        value: client.id,
+        label: client.name,
+      };
+    });
+  } else {
+    return [];
+  }
+});
 </script>
 <template>
   <ui-page-header
@@ -145,10 +160,8 @@ const searchClient = (text: string) => {
       <ui-form-input-comboboxe
         v-if="authUser.role === 'SUPER_ADMIN'"
         name="client_id"
-        item-key="id"
-        item-label="name"
         label="Client"
-        :items="clients"
+        :items="formatClients"
         :default="data.client"
         @change="searchClient"
         placeholder="Chercher un client"

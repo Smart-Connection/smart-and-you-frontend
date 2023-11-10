@@ -14,3 +14,7 @@ export const fetchSessions = async (params?: {
     params: params,
   });
 };
+
+export const insertSession = async (form: Session) => {
+  return useFetchApi({ url: "/sessions", method: "POST", body: form });
+};

@@ -6,6 +6,7 @@ import { EditableUser } from "~/types/entity/User";
 import { insertUser } from "~/services/UserService";
 import { fetchClients } from "~/services/ClientService";
 import { getRoleList } from "~/helpers/role";
+import { Client } from "~/types/entity/Client";
 
 // Form
 const schema = yup.object().shape({
@@ -64,6 +65,20 @@ const searchClient = (text: string) => {
   clientSearchText.value = text;
   reloadClients();
 };
+
+// Computed
+const formatClients = computed(() => {
+  if (clients.value) {
+    return clients.value.data.map((client: Client) => {
+      return {
+        value: client.id,
+        label: client.name,
+      };
+    });
+  } else {
+    return [];
+  }
+});
 </script>
 <template>
   <ui-page-header
@@ -86,10 +101,8 @@ const searchClient = (text: string) => {
     />
     <ui-form-input-comboboxe
       name="client"
-      item-key="id"
-      item-label="name"
       label="Client"
-      :items="clients"
+      :items="formatClients"
       @change="searchClient"
       placeholder="Chercher un client"
     />

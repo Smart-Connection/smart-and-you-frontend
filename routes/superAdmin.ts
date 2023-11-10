@@ -57,7 +57,7 @@ export const SUPER_ADMIN_ROUTES: RouteLink[] = [
       "modules-contract-view-id",
       "modules-contract-edit-id",
       "modules-contract-create",
-      "modules-session-create",
+      "modules-session-create-id",
       "modules-session-edit-id",
       "modules-session-view-id",
       "modules-session-delete"

@@ -23,7 +23,9 @@ const breadcrumbs = computed(() => [
     path: "/modules/contract",
   },
   {
-    label: data.value ? data.value.type : "Prestation",
+    label: data.value
+      ? `${data.value.client.name} - ${data.value.type}`
+      : "...",
     path: data.value?.id ? `/modules/contract/view/${id}` : "#",
   },
 ]);
@@ -56,7 +58,7 @@ const { deleteFunction, deleting } = useAsyncDelete({
 </script>
 <template>
   <ui-page-header
-    :title="data ? data.type : 'Prestation'"
+    :title="data ? `${data.client.name} - ${data.type}` : 'Prestation'"
     :breadcrumbs="breadcrumbs"
   >
     <ui-delete-modal

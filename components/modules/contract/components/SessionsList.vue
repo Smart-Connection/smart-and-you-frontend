@@ -1,7 +1,12 @@
 <script setup lang="ts">
+import dayjs from "dayjs";
 import { Session } from "~/types/entity/Sessions";
 import { getFormat, getFormatColor } from "~/helpers/contract";
 import { PencilIcon, EyeIcon, PlusIcon } from "@heroicons/vue/24/solid";
+import { format_dddd_d_mmmm_YYYY } from "~/helpers/date";
+
+const { useParams } = useRouteList();
+const params = useParams<{ id: string }>();
 
 defineProps<{
   loading: boolean;
@@ -24,7 +29,7 @@ const headers = computed(() => {
     },
     {
       key: "address",
-      label: "Addresse",
+      label: "Adresse",
     },
     {
       key: "zipcode",
@@ -44,7 +49,10 @@ const headers = computed(() => {
 <template>
   <ui-card title="Sessions">
     <template #headerActions>
-      <ui-button route-name="modules-session-create">
+      <ui-button
+        route-name="modules-session-create-id"
+        :route-params="{ id: params.id }"
+      >
         <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
         Session
       </ui-button>
@@ -58,6 +66,9 @@ const headers = computed(() => {
         >
           {{ item.consultant.firstname }} {{ item.consultant.lastname }}
         </ui-link>
+      </template>
+      <template #item-date="{ item }">
+        {{ format_dddd_d_mmmm_YYYY(item.date) }}
       </template>
       <template #item-format="{ item }">
         <ui-label :color="getFormatColor(item.format)">

@@ -6,10 +6,11 @@ import { Contract } from "~/types/entity/Contract";
 import { fetchClients } from "~/services/ClientService";
 import { getTypeList } from "~/helpers/contract";
 import { PlusIcon } from "@heroicons/vue/24/solid";
+import { Client } from "~/types/entity/Client";
 
 // Data
 const clientSearchText = ref("");
-const breadcrumbs = [
+const breadcrumbs = computed(() => [
   {
     label: "List des prestations",
     path: "/modules/client",
@@ -18,7 +19,7 @@ const breadcrumbs = [
     label: "Création d'une prestation",
     path: "/modules/contract/create",
   },
-];
+]);
 
 // Form
 const schema = yup.object().shape({
@@ -59,6 +60,20 @@ const searchClient = (text: string) => {
   clientSearchText.value = text;
   reloadClients();
 };
+
+// Computed
+const formatClients = computed(() => {
+  if (clients.value) {
+    return clients.value.data.map((client: Client) => {
+      return {
+        value: client.id,
+        label: client.name,
+      };
+    });
+  } else {
+    return [];
+  }
+});
 </script>
 <template>
   <ui-page-header
@@ -77,11 +92,9 @@ const searchClient = (text: string) => {
     <ui-card title="Client" class="md:col-span-1 col-span-2">
       <ui-form-input-comboboxe
         name="client_id"
-        item-key="id"
-        item-label="name"
         label="Client"
         required
-        :items="clients"
+        :items="formatClients"
         @change="searchClient"
         placeholder="Chercher un client"
       />

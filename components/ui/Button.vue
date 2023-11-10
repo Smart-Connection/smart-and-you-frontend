@@ -37,6 +37,12 @@ const getSize = computed(() => {
     return "h-[36px] rounded-md px-4 text-sm inline-flex block items-center justify-center";
   }
 });
+
+const click = () => {
+  if (!props.loading) {
+    emits("click");
+  }
+};
 </script>
 <template>
   <nuxt-link
@@ -65,7 +71,7 @@ const getSize = computed(() => {
     :type="type ? type : 'button'"
     class="relative select-none"
     :class="[getColor, getSize, block ? 'w-full' : '']"
-    @click="emits('click')"
+    @click="click()"
   >
     <div
       v-if="loading"

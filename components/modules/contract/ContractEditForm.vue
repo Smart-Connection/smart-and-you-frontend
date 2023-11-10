@@ -6,6 +6,7 @@ import { Contract } from "~/types/entity/Contract";
 import { fetchClients } from "~/services/ClientService";
 import { getTypeList, getStatusList } from "~/helpers/contract";
 import { PencilIcon } from "@heroicons/vue/24/solid";
+import { Client } from "~/types/entity/Client";
 
 // Form
 const schema = yup.object().shape({
@@ -59,7 +60,6 @@ const router = useRouter();
 
 // Submit
 const submit = handleSubmit(async () => {
-  console.log(values);
   return save();
 });
 const { submit: save, saving } = useAsyncSubmit({
@@ -75,6 +75,20 @@ const searchClient = (text: string) => {
   clientSearchText.value = text;
   reloadClients();
 };
+
+// Computed
+const formatClients = computed(() => {
+  if (clients.value) {
+    return clients.value.data.map((client: Client) => {
+      return {
+        value: client.id,
+        label: client.name,
+      };
+    });
+  } else {
+    return [];
+  }
+});
 </script>
 <template>
   <ui-page-header
@@ -103,11 +117,9 @@ const searchClient = (text: string) => {
     <ui-card title="Client" class="md:col-span-1 col-span-2">
       <ui-form-input-comboboxe
         name="client_id"
-        item-key="id"
-        item-label="name"
         label="Client"
         required
-        :items="clients"
+        :items="formatClients"
         :default="contract.client"
         @change="searchClient"
         placeholder="Chercher un client"
