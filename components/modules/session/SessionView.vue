@@ -28,7 +28,7 @@ const breadcrumbs = computed(() => [
     path: "/modules/contract",
   },
   {
-    label: session.value
+    label: session.value?.contract
       ? `${session.value.contract.client.name} - ${session.value.contract.type}`
       : "...",
     path: session.value
