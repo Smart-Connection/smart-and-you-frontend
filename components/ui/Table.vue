@@ -58,7 +58,7 @@ const add = () => {
             </thead>
             <tbody class="divide-y divide-gray-200">
               <tr v-if="!loading && data.data.length === 0">
-                <td colSpan="6">
+                <td :colSpan="headers.length">
                   <div class="flex justify-center items-center w-full py-10">
                     <div class="text-center">
                       <h3 class="mt-2 text-sm font-semibold text-gray-900">
@@ -67,15 +67,6 @@ const add = () => {
                       <p class="mt-1 text-sm text-gray-500">
                         Aucun donné pour cette page
                       </p>
-                      <div class="mt-6">
-                        <ui-button @click="add()">
-                          <PlusIcon
-                            class="-ml-0.5 mr-1.5 h-5 w-5"
-                            aria-hidden="true"
-                          />
-                          Ajouter
-                        </ui-button>
-                      </div>
                     </div>
                   </div>
                 </td>

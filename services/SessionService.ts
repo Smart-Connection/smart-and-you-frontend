@@ -14,3 +14,23 @@ export const fetchSessions = async (params?: {
     params: params,
   });
 };
+
+export const fetchSession = async (options: {
+  id: string;
+  params?: {
+    populate?: string
+  }
+}): Promise<Session> => {
+  return useFetchApi({
+    url: `/sessions/${options.id}`,
+    params: options.params,
+  });
+};
+
+export const insertSession = async (form: Session) => {
+  return useFetchApi({ url: "/sessions", method: "POST", body: form });
+};
+
+export const deleteSession = async (id: string) => {
+  return useFetchApi({ url: `/sessions/${id}`, method: "DELETE" });
+};

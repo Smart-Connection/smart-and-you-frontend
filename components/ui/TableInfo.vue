@@ -59,7 +59,7 @@ const columnFields = computed(() => {
             </nuxt-link>
             <div v-else class="text-gray-600">
               <slot :name="`item-${field.key}`" :item="field">
-                {{ field.value }}
+                {{ field.value ?? "--" }}
               </slot>
             </div>
           </td>

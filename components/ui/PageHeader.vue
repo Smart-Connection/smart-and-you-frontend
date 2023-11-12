@@ -55,7 +55,7 @@ defineProps<{
           {{ title }}
         </h2>
       </div>
-      <div class="flex flex-shrink-0 md:ml-4 md:mt-0">
+      <div class="flex flex-shrink-0 md:ml-4 md:mt-0 space-x-2">
         <slot />
       </div>
     </div>

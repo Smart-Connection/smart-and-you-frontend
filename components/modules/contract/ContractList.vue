@@ -2,7 +2,6 @@
 import { PencilIcon, EyeIcon, PlusIcon } from "@heroicons/vue/24/solid";
 import { getStatus, getType, getStatusColor } from "~/helpers/contract";
 import { fetchContracts } from "~/services/ContractService";
-import { User } from "~/types/entity/User";
 
 // Data
 const searchText = ref<string>("");
@@ -54,12 +53,10 @@ const search = (text: string) => {
 </script>
 <template>
   <ui-page-header title="Prestations">
-    <nuxt-link to="/modules/contract/create">
-      <ui-button>
-        <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
-        Ajouter
-      </ui-button>
-    </nuxt-link>
+    <ui-button route-name="modules-contract-create">
+      <PlusIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
+      Prestation
+    </ui-button>
   </ui-page-header>
   <ui-card title="Liste des Prestations">
     <template #headerActions>
@@ -87,20 +84,24 @@ const search = (text: string) => {
         </ui-label>
       </template>
       <template #item-client="{ item }">
-        <nuxt-link
-          :to="`/modules/client/view/${item.client.id}`"
-          class="text-blue-800"
+        <ui-link
+          route-name="modules-client-view-id"
+          :route-params="{ id: item.client.id }"
         >
           {{ item.client.name }}
-        </nuxt-link>
+        </ui-link>
       </template>
       <template #item-action="{ item }">
-        <ui-action-button :to="`/modules/contract/view/${item.id}`">
-          <EyeIcon class="w-4 h-4" />
-        </ui-action-button>
-        <ui-action-button :to="`/modules/contract/edit/${item.id}`">
-          <PencilIcon class="w-4 h-4" />
-        </ui-action-button>
+        <ui-action-button
+          route-name="modules-contract-view-id"
+          :route-params="{ id: item.id }"
+          :icon="EyeIcon"
+        />
+        <ui-action-button
+          route-name="modules-contract-edit-id"
+          :route-params="{ id: item.id }"
+          :icon="PencilIcon"
+        />
       </template>
     </ui-table>
   </ui-card>

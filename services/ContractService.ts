@@ -31,7 +31,7 @@ export const insertContract = async (form: Contract) => {
 };
 
 export const updateContract = async (form: Contract, id: string) => {
-  return useFetchApi({ url: `/contract/${id}`, method: "PUT", body: form });
+  return useFetchApi({ url: `/contracts/${id}`, method: "PUT", body: form });
 };
 
 export const deleteContract = async (id: string) => {

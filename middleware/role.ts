@@ -6,21 +6,22 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   const token = useCookie("token", {
     maxAge: parseInt(config.public.maxAuthCookieAge),
   });
+  const user = useState("user");
+  const { links, home } = useRouteList();
 
-  const { execute, data } = useAsyncData({
+  const { execute, data, error } = useAsyncData({
     promise: () => getMe(),
     options: {
       immediate: false,
     },
   });
 
-  const user = useState("user");
-  const { links, home } = useRouteList();
-
   if (!token.value) return navigateTo("/auth/login");
 
   if (!user.value) {
     await execute();
+
+    if(error.value) return navigateTo("/auth/login");
 
     if (!data) return navigateTo("/auth/login");
     user.value = data;

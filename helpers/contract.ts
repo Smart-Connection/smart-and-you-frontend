@@ -1,6 +1,14 @@
 import { Contract } from "~/types/entity/Contract";
 
 // ========================================================== Format
+export const getFormatColor = (type: string) => {
+  if (type === "FACE_TO_FACE") {
+    return "blue";
+  } else{
+    return "red";
+  }
+};
+
 export const getFormat = (format: string) => {
   if (format === "FACE_TO_FACE") {
     return "En présentiel";

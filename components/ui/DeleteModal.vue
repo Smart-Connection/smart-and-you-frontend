@@ -8,19 +8,28 @@ import {
 } from "@headlessui/vue";
 import { ExclamationTriangleIcon, TrashIcon } from "@heroicons/vue/24/outline";
 
+// Composable
+const { asAccess } = useRouteList();
+
 // Emit & Props
 const emit = defineEmits(["confirm"]);
 defineProps<{
   description: string;
   title: string;
   loading: boolean;
+  ruleName: string;
 }>();
 
 // Data
 const open = ref(false);
 </script>
 <template>
-  <ui-button color="error" :loading="loading" @click="open = true">
+  <ui-button
+    v-if="asAccess(ruleName)"
+    color="error"
+    :loading="loading"
+    @click="open = true"
+  >
     <TrashIcon class="-ml-0.5 mr-1.5 h-5 w-5" aria-hidden="true" />
     Supprimer
   </ui-button>

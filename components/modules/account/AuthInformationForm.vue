@@ -53,7 +53,7 @@ const { submit: save, saving } = useAsyncSubmit({
       <ui-form-input-text
         name="password"
         type="password"
-        label="Mot de passe"
+        label="Mot de passe actuel"
         placeholder="*********"
         autocomplete="off"
       />

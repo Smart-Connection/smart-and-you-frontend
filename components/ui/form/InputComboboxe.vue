@@ -9,9 +9,7 @@ const emits = defineEmits(["change"]);
 const props = defineProps<{
   name: string;
   label?: string;
-  itemKey: string;
-  itemLabel: string;
-  items: Pagination<any> | null | undefined;
+  items: { value: string; label: string }[];
   required?: boolean;
   placeholder?: string;
   default?: any;
@@ -24,11 +22,13 @@ const { value, errorMessage } = useField(props.name);
 const menuSelect = ref(null);
 const search = ref();
 const open = ref(false);
+const selected = ref("");
 
 onMounted(() => {
   emits("change", "");
   if (props.default) {
     search.value = props.default.name;
+    selected.value = props.default.name;
   }
 });
 
@@ -40,11 +40,15 @@ watch([search], () => {
 // Functions
 const select = (selectedValue: any) => {
   open.value = false;
-  value.value = selectedValue[props.itemKey];
-  search.value = selectedValue[props.itemLabel];
+  value.value = selectedValue.value;
+  search.value = selectedValue.label;
+  selected.value = selectedValue.label;
 };
 
-onClickOutside(menuSelect, () => (open.value = false));
+onClickOutside(menuSelect, () => {
+  open.value = false;
+  search.value = selected.value;
+});
 
 const searchDebounced = useDebounceFn(() => {
   emits("change", search.value);
@@ -60,23 +64,21 @@ const searchDebounced = useDebounceFn(() => {
       :error="errorMessage"
       @focus="open = true"
     />
-
     <div
       class="w-full bg-white shadow rounded-md absolute p-1 z-50 top-[72px]"
       v-if="items && open"
     >
       <div
-        :key="item[itemKey]"
-        v-for="item in items.data"
+        :key="item.value"
+        v-for="item in items"
         @click="select(item)"
         class="text-sm hover:bg-blue-600 hover:text-white p-3 rounded cursor-pointer"
       >
-        {{ item[itemLabel] }}
+        <slot name="item" :item="item">
+          {{ item.label }}
+        </slot>
       </div>
-      <div
-        v-if="items.data.length === 0"
-        class="text-sm p-3 rounded cursor-pointer"
-      >
+      <div v-if="items.length === 0" class="text-sm p-3 rounded cursor-pointer">
         Aucun donnée
       </div>
     </div>

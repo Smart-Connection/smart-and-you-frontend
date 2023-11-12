@@ -32,6 +32,7 @@ export const SUPER_ADMIN_ROUTES: RouteLink[] = [
           "modules-client-create",
           "modules-client-edit-id",
           "modules-client-view-id",
+          "modules-client-delete"
         ],
       },
       {
@@ -42,6 +43,7 @@ export const SUPER_ADMIN_ROUTES: RouteLink[] = [
           "modules-user-create",
           "modules-user-edit-id",
           "modules-user-view-id",
+          "modules-user-delete"
         ],
       },
     ],
@@ -55,6 +57,11 @@ export const SUPER_ADMIN_ROUTES: RouteLink[] = [
       "modules-contract-view-id",
       "modules-contract-edit-id",
       "modules-contract-create",
+      "modules-contract-delete",
+      "modules-session-create-id",
+      "modules-session-edit-id",
+      "modules-session-view-id",
+      "modules-session-delete"
     ],
   },
   {

@@ -124,17 +124,15 @@ emits("change", {
     class="mb-4"
   >
     <template #headerActions>
-      <div class="flex items-center">
-        <ui-button color="secondary" class="mr-2" @click="setAsToday()"
-          >Aujourd'hui</ui-button
-        >
-        <ui-button color="secondary" class="mr-2" @click="previousMonth()">
-          <ChevronLeftIcon class="w-5 text-gray-400" />
-        </ui-button>
-        <ui-button color="secondary" @click="nextMonth()">
-          <ChevronRightIcon class="w-5 text-gray-400" />
-        </ui-button>
-      </div>
+      <ui-button color="secondary" class="mr-2" @click="setAsToday()"
+        >Aujourd'hui</ui-button
+      >
+      <ui-button color="secondary" class="mr-2" @click="previousMonth()">
+        <ChevronLeftIcon class="w-5 text-gray-400" />
+      </ui-button>
+      <ui-button color="secondary" @click="nextMonth()">
+        <ChevronRightIcon class="w-5 text-gray-400" />
+      </ui-button>
     </template>
     <div class="lg:flex lg:h-full lg:flex-col">
       <div

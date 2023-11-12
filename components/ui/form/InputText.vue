@@ -54,6 +54,7 @@ const getPadding = computed(() => {
         :name="name"
         :autocomplete="autocomplete"
         :disabled="disabled"
+        required
         :class="[
           getPadding,
           errorMessage

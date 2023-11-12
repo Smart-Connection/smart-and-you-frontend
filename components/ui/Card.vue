@@ -7,7 +7,9 @@
       <h3 class="text-base font-semibold leading-6 text-gray-900">
         {{ title }}
       </h3>
-      <slot name="headerActions" />
+      <div class="space-x-2 flex items-center">
+        <slot name="headerActions" />
+      </div>
     </div>
     <div class="p-4 flex-auto"><slot /></div>
     <div

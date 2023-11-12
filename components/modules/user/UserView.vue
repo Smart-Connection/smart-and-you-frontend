@@ -82,6 +82,7 @@ const { deleteFunction, deleting } = useAsyncDelete({
     :breadcrumbs="breadcrumbs"
   >
     <ui-delete-modal
+      rule-name="modules-user-delete"
       v-if="
         user.role === 'SUPER_ADMIN' ||
         (user.role === 'ADMIN' && data?.role != 'SUPER_ADMIN')
@@ -91,19 +92,10 @@ const { deleteFunction, deleting } = useAsyncDelete({
       title="Suppression d'un utilisateur"
       description="Si vous cliquez sur supprimer, cette utilisateur sera totalement supprimé"
     />
-    <nuxt-link
-      v-if="
-        user.role === 'SUPER_ADMIN' ||
-        (user.role === 'ADMIN' && data?.role != 'SUPER_ADMIN')
-      "
-      class="ml-2"
-      :to="`/modules/user/edit/${id}`"
-    >
-      <ui-button>
-        <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
-        Modifier
-      </ui-button>
-    </nuxt-link>
+    <ui-button route-name="modules-user-edit-id" :route-params="{ id: id }">
+      <PencilIcon class="-ml-0.5 mr-1.5 h-4 w-4" aria-hidden="true" />
+      Modifier
+    </ui-button>
   </ui-page-header>
   <ui-info
     v-if="data?.account_creation_token"
