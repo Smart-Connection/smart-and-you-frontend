@@ -12,7 +12,8 @@ const props = defineProps<{
   items: { value: string; label: string }[];
   required?: boolean;
   placeholder?: string;
-  default?: any;
+  loading?: boolean;
+  default?: { value: string; label: string };
 }>();
 
 // Composables
@@ -20,15 +21,15 @@ const { value, errorMessage } = useField(props.name);
 
 // Data
 const menuSelect = ref(null);
-const search = ref();
+const search = ref("");
 const open = ref(false);
 const selected = ref("");
 
 onMounted(() => {
   emits("change", "");
   if (props.default) {
-    search.value = props.default.name;
-    selected.value = props.default.name;
+    search.value = props.default.label;
+    selected.value = props.default.label;
   }
 });
 
@@ -36,6 +37,16 @@ onMounted(() => {
 watch([search], () => {
   searchDebounced();
 });
+
+watch(
+  () => props.default,
+  () => {
+    if (props.default) {
+      search.value = props.default.label;
+      selected.value = props.default.label;
+    }
+  }
+);
 
 // Functions
 const select = (selectedValue: any) => {

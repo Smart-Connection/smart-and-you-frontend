@@ -29,6 +29,7 @@ const {
 
 const items = computed(() => {
   if (!sessions.value) return [];
+  console.log(sessions.value);
   return sessions.value.map((session) => {
     const event: Event = {
       id: session.id,
@@ -37,6 +38,7 @@ const items = computed(() => {
       }`,
       date: session.date,
       color: getTypeBackgroundColor(session.contract.type),
+      link: `/modules/session/view/${session.id}`,
     };
     return event;
   });

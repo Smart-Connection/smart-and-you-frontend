@@ -61,11 +61,13 @@ const headers = computed(() => {
     <ui-simple-table :items="sessions" :headers="headers" :loading="loading">
       <template #item-consultant="{ item }">
         <ui-link
+          v-if="item.consultant"
           route-name="modules-user-view-id"
           :route-params="{ id: item.consultant.id }"
         >
           {{ item.consultant.firstname }} {{ item.consultant.lastname }}
         </ui-link>
+        <p v-else>Aucun consultant</p>
       </template>
       <template #item-date="{ item }">
         {{ format_dddd_d_mmmm_YYYY(item.date) }}

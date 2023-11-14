@@ -89,6 +89,14 @@ const formatClients = computed(() => {
     return [];
   }
 });
+
+const formatDefaultConsultants = computed(() => {
+  if (!contract.value) return;
+  return {
+    value: contract.value.client.id,
+    label: contract.value.client.name,
+  };
+});
 </script>
 <template>
   <ui-page-header
@@ -120,7 +128,7 @@ const formatClients = computed(() => {
         label="Client"
         required
         :items="formatClients"
-        :default="contract.client"
+        :default="formatDefaultConsultants"
         @change="searchClient"
         placeholder="Chercher un client"
       />

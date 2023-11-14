@@ -76,6 +76,7 @@ const { execute: reloadConsultants, data: consultants } = useAsyncData({
       search: clientSearchText.value,
       per_page: 5,
       page: 1,
+      role: "CONSULTANT",
     }),
 });
 

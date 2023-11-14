@@ -27,6 +27,15 @@ export const fetchSession = async (options: {
   });
 };
 
+export const updateSession = async (id: string, form: Session) => {
+  return useFetchApi({
+    url: `/sessions/${id}`,
+    method: "PUT",
+    body: form,
+  });
+};
+
+
 export const insertSession = async (form: Session) => {
   return useFetchApi({ url: "/sessions", method: "POST", body: form });
 };

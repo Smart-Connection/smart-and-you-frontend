@@ -15,7 +15,10 @@ const schema = yup.object().shape({
     .email("L'email n'est pas valide")
     .required("L'email est requis"),
   role: yup.string().required("Le rôle est requis"),
-  client: yup.string(),
+  client: yup.string().when("role", {
+    is: (role: string) => role === "CONSULTANT" || role === "SUPER_ADMIN",
+    then: () => yup.string().required("Le client est requise"),
+  }),
 });
 
 // Composable
@@ -100,8 +103,10 @@ const formatClients = computed(() => {
       required
     />
     <ui-form-input-comboboxe
+      v-if="values.role !== 'CONSULTANT' && values.role !== 'SUPER_ADMIN'"
       name="client"
       label="Client"
+      required
       :items="formatClients"
       @change="searchClient"
       placeholder="Chercher un client"
