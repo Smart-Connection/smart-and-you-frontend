@@ -39,8 +39,8 @@ const fields = computed(() => {
     { label: "Type", value: data.value.type },
     {
       label: "Client",
-      value: data.value.client.name,
-      to: `/modules/client/view/${data.value.client.id}`,
+      value: data.value.client,
+      key: "client",
     },
     { label: "Status", key: "status", value: data.value.status },
   ];
@@ -81,6 +81,14 @@ const { deleteFunction, deleting } = useAsyncDelete({
       <ui-label :color="getStatusColor(item.value)">
         {{ getStatus(item.value) }}
       </ui-label>
+    </template>
+    <template #item-client="{ item }">
+      <ui-link
+        route-name="modules-client-view-id"
+        :route-params="{ id: item.value.id }"
+      >
+        {{ item.value.name }}
+      </ui-link>
     </template>
   </ui-table-info>
 

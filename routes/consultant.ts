@@ -2,6 +2,7 @@ import type { RouteLink } from "@/types/router/Routes";
 import {
   ChartBarSquareIcon,
   CurrencyEuroIcon,
+  CalendarIcon
 } from "@heroicons/vue/24/outline";
 
 // Admin routes list
@@ -13,6 +14,12 @@ export const CONSULTANT_ROUTES: RouteLink[] = [
     routes: ["modules-dashboard-consultant"],
   },
   {
+    label: "Calendrier",
+    icon: CalendarIcon,
+    name: "modules-calendar",
+    routes: ["modules-calendar"],
+  },
+  {
     label: "Prestations",
     icon: CurrencyEuroIcon,
     name: "modules-contract",
@@ -20,6 +27,7 @@ export const CONSULTANT_ROUTES: RouteLink[] = [
       "modules-contract",
       "modules-contract-view-id",
       "modules-contract-create",
+      "modules-session-view-id",
     ],
   },
   {

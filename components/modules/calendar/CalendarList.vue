@@ -29,7 +29,6 @@ const {
 
 const items = computed(() => {
   if (!sessions.value) return [];
-  console.log(sessions.value);
   return sessions.value.map((session) => {
     const event: Event = {
       id: session.id,
@@ -51,6 +50,6 @@ const updateDate = (dates: { startAt: string; endAt: string }) => {
 };
 </script>
 <template>
-  <ui-page-header title="Calendrier"></ui-page-header>
+  <ui-page-header title="Calendrier" />
   <ui-calendar @change="updateDate" :events="items" />
 </template>

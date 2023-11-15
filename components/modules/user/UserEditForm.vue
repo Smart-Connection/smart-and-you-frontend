@@ -108,7 +108,7 @@ const formatClients = computed(() => {
 });
 
 const formatDefaultConsultants = computed(() => {
-  if (!data.value) return;
+  if (!data.value?.client) return;
   return {
     value: data.value.client.id,
     label: data.value.client.name,
